@@ -45,7 +45,7 @@ export const LessonContent: React.FC<LessonContentProps> = ({ content }) => {
             h1: ({ node, ...props }) => <h1 className="prose-h1" {...props} />,
             h2: ({ node, ...props }) => <h2 className="prose-h2" {...props} />,
             h3: ({ node, ...props }) => <h3 className="prose-h3" {...props} />,
-            p: ({ node, ...props }) => <p className="prose-p" {...props} />,
+            p: ({ node, ...props }) => <div className="prose-p" {...props} />,
             ul: ({ node, ...props }) => <ul className="prose-ul" {...props} />,
             ol: ({ node, ...props }) => <ol className="prose-ol" {...props} />,
             li: ({ node, ...props }) => <li className="prose-li" {...props} />,
