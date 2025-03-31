@@ -16,39 +16,19 @@ const nextConfig = {
   async headers() {
     return [
       {
-        source: "/(.*)",
+        source: '/(.*)',
         headers: [
           {
-            key: "Cross-Origin-Embedder-Policy",
-            value: "require-corp",
+            key: 'Cross-Origin-Embedder-Policy',
+            value: 'require-corp',
           },
           {
-            key: "Cross-Origin-Opener-Policy",
-            value: "same-origin",
+            key: 'Cross-Origin-Opener-Policy',
+            value: 'same-origin',
           },
         ],
       },
     ];
-  },
-  // Configure webpack to properly handle WebAssembly
-  webpack(config) {
-    // Add support for WebAssembly
-    config.experiments = {
-      ...config.experiments,
-      asyncWebAssembly: true,
-      layers: true,
-    };
-
-    // Configure file loaders for .wasm files
-    config.module.rules.push({
-      test: /\.wasm$/,
-      type: "asset/resource",
-      generator: {
-        filename: "static/wasm/[name].[hash][ext]",
-      },
-    });
-
-    return config;
   },
 };
 
