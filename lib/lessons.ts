@@ -6,7 +6,8 @@ export const lessons: Lesson[] = [
     id: "1",
     slug: "introduction-to-sql",
     title: "Introduction to SQL",
-    description: "Learn what SQL is and why it's important",
+    description:
+      "Learn what Structured Query Language is and why it's important",
     content: `
 # What is SQL?
 

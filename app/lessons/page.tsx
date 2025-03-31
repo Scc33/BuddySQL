@@ -89,7 +89,7 @@ export default function LessonsPage() {
                 key={category.name}
                 onClick={() => setSelectedCategory(category.name)}
                 className={`
-                  whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm
+                  whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm cursor-pointer
                   ${
                     selectedCategory === category.name
                       ? "border-blue-500 text-blue-600"
