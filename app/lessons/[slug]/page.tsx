@@ -2,7 +2,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { notFound } from "next/navigation";
+import { notFound, useParams } from "next/navigation";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { SqlEditor } from "@/components/lessons/SqlEditor";
 import { LessonContent } from "@/components/lessons/LessonContent";
@@ -21,7 +21,10 @@ const initialProgress: UserProgress = {
   lessons: {},
 };
 
-export default function LessonPage({ params }: { params: { slug: string } }) {
+export default function LessonPage() {
+  const params = useParams();
+  const slug = params.slug as string;
+
   const [lesson, setLesson] = useState<any>(null);
   const [userProgress, setUserProgress] = useLocalStorage<UserProgress>(
     "sql-playground-progress",
@@ -44,7 +47,7 @@ export default function LessonPage({ params }: { params: { slug: string } }) {
 
   // Load lesson data based on slug
   useEffect(() => {
-    const lessonData = getLessonBySlug(params.slug);
+    const lessonData = getLessonBySlug(slug);
     if (!lessonData) {
       notFound();
     }
@@ -69,7 +72,7 @@ export default function LessonPage({ params }: { params: { slug: string } }) {
       ...prev,
       lastLesson: lessonData.id,
     }));
-  }, [params.slug, userProgress.lessons, setUserProgress]);
+  }, [slug, userProgress.lessons, setUserProgress]);
 
   // Initialize the database once when ready
   useEffect(() => {
