@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { QueryResult, SqlResult } from "@/types/database";
-import initSqlJs from "sql.js";
+import { loadSqlJs } from "@/lib/loader";
 
 export function useSqlJs() {
   const [SQL, setSQL] = useState<any>(null);
