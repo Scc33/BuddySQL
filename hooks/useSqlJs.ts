@@ -1,8 +1,8 @@
+// hooks/useSqlJs.ts
 "use client";
 
 import { useState, useEffect } from "react";
 import { QueryResult, SqlResult } from "@/types/database";
-import initSqlJs from "sql.js";
 
 export function useSqlJs() {
   const [SQL, setSQL] = useState<any>(null);
@@ -14,9 +14,28 @@ export function useSqlJs() {
     async function initializeSql() {
       try {
         setIsLoading(true);
+
+        // Check if the sql.js script is already loaded
+        if (!(window as any).initSqlJs) {
+          // Load the SQL.js script from CDN
+          const script = document.createElement("script");
+          script.src =
+            "https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js";
+          script.async = true;
+
+          // Wait for the script to load
+          await new Promise((resolve, reject) => {
+            script.onload = resolve;
+            script.onerror = () =>
+              reject(new Error("Failed to load SQL.js script"));
+            document.head.appendChild(script);
+          });
+        }
+
         // Initialize SQL.js
-        const SQL = await initSqlJs({
-          locateFile: (file: string) => `/sql-wasm.wasm`,
+        const SQL = await (window as any).initSqlJs({
+          locateFile: (file) =>
+            `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/${file}`,
         });
 
         // Create a new database
@@ -74,28 +93,6 @@ export function useSqlJs() {
     }
   };
 
-  // Function to run SQL statements that don't return results
-  const runSql = (
-    sql: string
-  ): { success: boolean; error: SqlResult | null } => {
-    if (!db) {
-      return { success: false, error: null };
-    }
-
-    try {
-      db.run(sql);
-      return { success: true, error: null };
-    } catch (err: any) {
-      return {
-        success: false,
-        error: {
-          message: err.message || "Error executing SQL",
-          code: err.code,
-        },
-      };
-    }
-  };
-
   // Function to initialize a database with sample data
   const initializeDatabase = (sqlStatements: string): boolean => {
     if (!db) return false;
@@ -115,7 +112,6 @@ export function useSqlJs() {
     isLoading,
     error,
     executeQuery,
-    runSql,
     initializeDatabase,
   };
 }
