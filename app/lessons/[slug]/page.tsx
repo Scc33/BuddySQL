@@ -17,6 +17,8 @@ import {
 import { UserProgress, LessonProgress } from "@/types/lesson";
 import { useSqlJs } from "@/hooks/useSqlJs";
 import Loading from "@/components/ui/loading";
+import { getGradeOptionsForLesson } from "@/lib/lessonGrader";
+import { GradeOptions } from "@/lib/queryGrader";
 
 const initialProgress: UserProgress = {
   lessons: {},
@@ -38,6 +40,9 @@ export default function LessonPage() {
   const [showChallenge, setShowChallenge] = useState(false);
   const [challengeSuccess, setChallengeSuccess] = useState(false);
   const [dbInitialized, setDbInitialized] = useState(false);
+  const [gradeOptions, setGradeOptions] = useState<GradeOptions>({});
+  const [challengeGradeOptions, setChallengeGradeOptions] =
+    useState<GradeOptions>({});
 
   const {
     isLoading,
@@ -53,6 +58,10 @@ export default function LessonPage() {
       notFound();
     }
     setLesson(lessonData);
+
+    // Set grading options for this lesson
+    setGradeOptions(getGradeOptionsForLesson(lessonData.id, false));
+    setChallengeGradeOptions(getGradeOptionsForLesson(lessonData.id, true));
 
     // Check if lesson has been completed before
     if (userProgress.lessons[lessonData.id]) {
@@ -81,8 +90,6 @@ export default function LessonPage() {
 
   // Initialize the database once when ready
   useEffect(() => {
-    console.log("load db");
-
     if (db && !dbInitialized) {
       const sql = initializeDatabase();
       const success = initDb(sql);
@@ -136,12 +143,6 @@ export default function LessonPage() {
   // Handle query execution and progress tracking
   const handleExecuteQuery = (sql: string) => {
     const result = executeQuery(sql);
-
-    // If no error and this is the first lesson, mark it as completed
-    if (!result.error && !lessonProgress.completed && !lesson.challenge) {
-      updateLessonProgress(true, sql);
-    }
-
     return result;
   };
 
@@ -162,44 +163,6 @@ export default function LessonPage() {
         [lesson.id]: newProgress,
       },
     }));
-  };
-
-  // Handle challenge query
-  const handleChallengeQuery = (sql: string) => {
-    const result = executeQuery(sql);
-
-    // Check if challenge is successful
-    if (lesson.challenge && !result.error) {
-      const validationQuery = lesson.challenge.validation_query;
-      let success = false;
-
-      if (validationQuery) {
-        // Simple validation: normalize query strings and compare
-        const normalizedUserQuery = sql
-          .toLowerCase()
-          .replace(/\s+/g, " ")
-          .trim();
-        const normalizedValidationQuery = validationQuery
-          .toLowerCase()
-          .replace(/\s+/g, " ")
-          .trim();
-
-        success =
-          normalizedUserQuery === normalizedValidationQuery ||
-          (result.results && result.results.length > 0);
-      } else if (result.results && result.results.length > 0) {
-        success = true;
-      }
-
-      if (success) {
-        setChallengeSuccess(true);
-        updateLessonProgress(true, sql);
-      }
-
-      return result;
-    }
-
-    return result;
   };
 
   const previousLesson = getPreviousLesson(lesson.id);
@@ -223,6 +186,7 @@ export default function LessonPage() {
               initialQuery={lesson.initialQuery || ""}
               onExecuteQuery={handleExecuteQuery}
               onSaveProgress={updateLessonProgress}
+              gradeOptions={gradeOptions}
             />
 
             {lesson.challenge &&
@@ -243,8 +207,10 @@ export default function LessonPage() {
                     ) : (
                       <SqlEditor
                         initialQuery=""
-                        onExecuteQuery={handleChallengeQuery}
+                        onExecuteQuery={handleExecuteQuery}
+                        onSaveProgress={updateLessonProgress}
                         expectedQuery={lesson.challenge.validation_query}
+                        gradeOptions={challengeGradeOptions}
                       />
                     )}
                   </CardContent>

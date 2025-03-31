@@ -3,12 +3,15 @@
 import React, { useState, useEffect } from "react";
 import { QueryResult } from "@/types/database";
 import { ResultTable } from "./ResultTable";
+import { gradeQuery, GradeOptions, GradeResult } from "@/lib/queryGrader";
+import QueryFeedback from "./QueryFeedback";
 
 interface SqlEditorProps {
   initialQuery: string;
   onExecuteQuery: (sql: string) => QueryResult;
-  onSaveProgress?: (query: string, success?: boolean) => void;
+  onSaveProgress?: (completed: boolean, query: string) => void;
   expectedQuery?: string;
+  gradeOptions?: GradeOptions;
   children?: React.ReactNode;
 }
 
@@ -17,6 +20,7 @@ export const SqlEditor: React.FC<SqlEditorProps> = ({
   onExecuteQuery,
   onSaveProgress,
   expectedQuery,
+  gradeOptions = {},
   children,
 }) => {
   const [query, setQuery] = useState(initialQuery || "");
@@ -24,7 +28,7 @@ export const SqlEditor: React.FC<SqlEditorProps> = ({
     results: null,
     error: null,
   });
-  const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
+  const [gradeResult, setGradeResult] = useState<GradeResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -40,23 +44,19 @@ export const SqlEditor: React.FC<SqlEditorProps> = ({
       const result = onExecuteQuery(query);
       setQueryResult(result);
 
-      if (expectedQuery) {
-        // Simple query validation - strip whitespace and make case insensitive
-        const normalizedQuery = query.toLowerCase().replace(/\s+/g, " ").trim();
-        const normalizedExpected = expectedQuery
-          .toLowerCase()
-          .replace(/\s+/g, " ")
-          .trim();
+      // Grade the query using our grading system
+      const options: GradeOptions = {
+        ...gradeOptions,
+        expectedQuery: expectedQuery || gradeOptions.expectedQuery,
+      };
 
-        const success =
-          normalizedQuery === normalizedExpected ||
-          (!result.error && result.results && result.results.length > 0);
+      const grade = gradeQuery(query, result.results, !!result.error, options);
 
-        setIsSuccess(success);
+      setGradeResult(grade);
 
-        if (onSaveProgress) {
-          onSaveProgress(query, success);
-        }
+      // Update progress if callback is provided
+      if (onSaveProgress) {
+        onSaveProgress(grade.isCorrect, query);
       }
     } catch (err) {
       console.error("Error executing query:", err);
@@ -100,13 +100,16 @@ export const SqlEditor: React.FC<SqlEditorProps> = ({
       {children}
 
       <div className="p-4">
+        {/* Display query feedback */}
+        {gradeResult && <QueryFeedback gradeResult={gradeResult} />}
+
         {queryResult.error ? (
-          <div className="p-4 border border-red-300 bg-red-50 text-red-800 rounded-md">
+          <div className="mt-4 p-4 border border-red-300 bg-red-50 text-red-800 rounded-md">
             <p className="font-semibold">Error:</p>
             <p className="font-mono text-sm">{queryResult.error.message}</p>
           </div>
         ) : queryResult.results && queryResult.results.length > 0 ? (
-          <div>
+          <div className="mt-4">
             {queryResult.executionTime && (
               <div className="mb-2 text-sm text-gray-500">
                 Query executed in {queryResult.executionTime}ms
@@ -115,30 +118,10 @@ export const SqlEditor: React.FC<SqlEditorProps> = ({
             <ResultTable results={queryResult.results[0]} />
           </div>
         ) : (
-          <div className="p-4 text-gray-500 text-center border border-dashed border-gray-300 rounded-md">
+          <div className="mt-4 p-4 text-gray-500 text-center border border-dashed border-gray-300 rounded-md">
             {queryResult.results
               ? "Query executed successfully but returned no results."
               : "Run a query to see results."}
-          </div>
-        )}
-
-        {isSuccess !== null && (
-          <div
-            className={`mt-4 p-3 rounded-md ${
-              isSuccess
-                ? "bg-green-50 border border-green-200"
-                : "bg-yellow-50 border border-yellow-200"
-            }`}
-          >
-            <p
-              className={`font-medium ${
-                isSuccess ? "text-green-800" : "text-yellow-800"
-              }`}
-            >
-              {isSuccess
-                ? "✓ Success! Your query is correct."
-                : "× Almost there! Try again with a different query."}
-            </p>
           </div>
         )}
       </div>
