@@ -1,7 +1,7 @@
 // app/lessons/[slug]/page.tsx
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { notFound, useParams } from "next/navigation";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { SqlEditor } from "@/components/lessons/SqlEditor";
@@ -24,6 +24,7 @@ const initialProgress: UserProgress = {
 export default function LessonPage() {
   const params = useParams();
   const slug = params.slug as string;
+  const initialRender = useRef(true);
 
   const [lesson, setLesson] = useState<any>(null);
   const [userProgress, setUserProgress] = useLocalStorage<UserProgress>(
@@ -45,7 +46,6 @@ export default function LessonPage() {
     db,
   } = useSqlJs();
 
-  // Load lesson data based on slug
   useEffect(() => {
     const lessonData = getLessonBySlug(slug);
     if (!lessonData) {
@@ -66,16 +66,22 @@ export default function LessonPage() {
         setChallengeSuccess(true);
       }
     }
+  }, [slug, userProgress.lessons]);
 
-    // Update last visited lesson
-    setUserProgress((prev) => ({
-      ...prev,
-      lastLesson: lessonData.id,
-    }));
-  }, [slug, userProgress.lessons, setUserProgress]);
+  useEffect(() => {
+    if (lesson && initialRender.current) {
+      initialRender.current = false;
+      setUserProgress((prev) => ({
+        ...prev,
+        lastLesson: lesson.id,
+      }));
+    }
+  }, [lesson, setUserProgress]);
 
   // Initialize the database once when ready
   useEffect(() => {
+    console.log("load db");
+
     if (db && !dbInitialized) {
       const sql = initializeDatabase();
       const success = initDb(sql);
