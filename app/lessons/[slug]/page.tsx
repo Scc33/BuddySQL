@@ -254,7 +254,7 @@ export default function LessonPage() {
             {!showChallenge && lesson.challenge && (
               <button
                 onClick={() => setShowChallenge(true)}
-                className="w-full py-2 px-4 border border-blue-500 text-blue-500 rounded-md hover:bg-blue-50"
+                className="w-full py-2 px-4 border border-blue-500 text-blue-500 rounded-md hover:bg-blue-50 cursor-pointer"
               >
                 Show Challenge
               </button>
