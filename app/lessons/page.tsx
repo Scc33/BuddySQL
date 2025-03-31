@@ -6,12 +6,13 @@ import LessonCard from "@/components/lessons/LessonCard";
 import { lessons, lessonCategories } from "@/lib/lessons";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { UserProgress } from "@/types/lesson";
+import { SqliteProvider } from "@/components/database/SqliteProvider";
 
 const initialProgress: UserProgress = {
   lessons: {},
 };
 
-export default function LessonsPage() {
+function LessonsPageContent() {
   const [userProgress, setUserProgress] = useLocalStorage<UserProgress>(
     "sql-playground-progress",
     initialProgress
@@ -116,5 +117,13 @@ export default function LessonsPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function LessonsPage() {
+  return (
+    <SqliteProvider>
+      <LessonsPageContent />
+    </SqliteProvider>
   );
 }

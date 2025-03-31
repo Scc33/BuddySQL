@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { QueryResult, SqlResult } from "@/types/database";
-import { loadSqlJs } from "@/lib/loader";
+import initSqlJs from "sql.js";
 
 export function useSqlJs() {
   const [SQL, setSQL] = useState<any>(null);
@@ -14,9 +14,11 @@ export function useSqlJs() {
     async function initializeSql() {
       try {
         setIsLoading(true);
-        // Initialize SQL.js
+
+        // Initialize SQL.js with proper path to wasm file
         const SQL = await initSqlJs({
-          locateFile: (file: string) => `/sql-wasm.wasm`,
+          // This path should point to where the wasm file is served from the public directory
+          locateFile: (file) => `/sql-wasm.wasm`,
         });
 
         // Create a new database
