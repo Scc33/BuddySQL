@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { notFound } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { SqlEditor } from "@/components/lessons/SqlEditor";
 import { LessonContent } from "@/components/lessons/LessonContent";
 import LessonNavigation from "@/components/lessons/LessonNavigation";
+import { useSqlJs } from "@/hooks/useSqlJs";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import {
   getLessonBySlug,
@@ -14,19 +15,14 @@ import {
   initializeDatabase,
 } from "@/lib/lessons";
 import { UserProgress, LessonProgress } from "@/types/lesson";
-import {
-  SqliteProvider,
-  useSqlite,
-  SqliteLoading,
-  SqliteError,
-} from "@/components/database/SqliteProvider";
 
 const initialProgress: UserProgress = {
   lessons: {},
 };
 
-// This wrapper ensures SqliteProvider is only mounted on the client
-function LessonPageContent({ params }: { params: { slug: string } }) {
+export default function LessonPage({ params }: { params: { slug: string } }) {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(true);
   const [lesson, setLesson] = useState<any>(null);
   const [userProgress, setUserProgress] = useLocalStorage<UserProgress>(
     "sql-playground-progress",
@@ -38,12 +34,7 @@ function LessonPageContent({ params }: { params: { slug: string } }) {
   const [showChallenge, setShowChallenge] = useState(false);
   const [challengeSuccess, setChallengeSuccess] = useState(false);
 
-  const {
-    isLoading,
-    error,
-    executeQuery,
-    initializeDatabase: initDb,
-  } = useSqlite();
+  const { db, error, executeQuery, initializeDatabase: initDb } = useSqlJs();
 
   // Load lesson data based on slug
   useEffect(() => {
@@ -76,21 +67,15 @@ function LessonPageContent({ params }: { params: { slug: string } }) {
 
   // Initialize the database
   useEffect(() => {
-    if (!isLoading && !error) {
+    if (db) {
       const sql = initializeDatabase();
-      initDb(sql);
+      if (initDb(sql)) {
+        setIsLoading(false);
+      }
     }
-  }, [isLoading, error, initDb]);
+  }, [db, initDb]);
 
-  if (isLoading) {
-    return <SqliteLoading />;
-  }
-
-  if (error) {
-    return <SqliteError message={error} />;
-  }
-
-  if (!lesson) {
+  if (!lesson || isLoading) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="animate-pulse">
@@ -238,14 +223,5 @@ function LessonPageContent({ params }: { params: { slug: string } }) {
         />
       </div>
     </div>
-  );
-}
-
-// This is the main export that wraps the content with the SQLite provider
-export default function LessonPage({ params }: { params: { slug: string } }) {
-  return (
-    <SqliteProvider>
-      <LessonPageContent params={params} />
-    </SqliteProvider>
   );
 }
