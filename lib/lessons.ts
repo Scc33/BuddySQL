@@ -1,4 +1,3 @@
-// lib/lessons.ts
 import { Lesson } from "@/types/lesson";
 import { sampleDatabaseInit } from "./database";
 
