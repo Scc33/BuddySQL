@@ -1,26 +1,83 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --foreground-rgb: 0, 0, 0;
+  --background-rgb: 248, 250, 252;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  color: rgb(var(--foreground-rgb));
+  background: rgb(var(--background-rgb));
+}
+
+/* Custom prose styles for markdown content */
+@utility prose code {
+  background-color: var(--color-gray-100);
+  border-radius: 0.25rem;
+  padding-inline: 0.25rem;
+  padding-block: 0.125rem;
+  font-size: 0.875rem;
+  font-family: var(--font-mono);
+}
+
+@utility prose pre {
+  background-color: var(--color-gray-800);
+  color: var(--color-gray-200);
+  border-radius: 0.375rem;
+  overflow-x: auto;
+  padding: 1rem;
+}
+
+@utility prose pre code {
+  background-color: transparent;
+  color: var(--color-gray-200);
+  padding: 0;
+  font-size: 0.875rem;
+  font-family: var(--font-mono);
+  border: none;
+}
+
+@utility prose h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  margin-top: 0;
+}
+
+@utility prose h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+@utility prose h3 {
+  font-size: 1.125rem;
+  font-weight: 500;
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+@utility prose p {
+  margin-top: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+@utility prose ul {
+  list-style-type: disc;
+  padding-left: 1.25rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+@utility prose ol {
+  list-style-type: decimal;
+  padding-left: 1.25rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+@utility prose li {
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
 }
