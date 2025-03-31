@@ -16,6 +16,7 @@ import {
 } from "@/lib/lessons";
 import { UserProgress, LessonProgress } from "@/types/lesson";
 import { useSqlJs } from "@/hooks/useSqlJs";
+import Loading from "@/components/ui/loading";
 
 const initialProgress: UserProgress = {
   lessons: {},
@@ -91,22 +92,12 @@ export default function LessonPage() {
     }
   }, [db, dbInitialized, initDb]);
 
-  // Loading states
   if (isLoading) {
     return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex items-center justify-center p-8">
-          <div className="text-center">
-            <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-lg font-medium text-gray-700">
-              Loading SQL engine...
-            </p>
-            <p className="text-sm text-gray-500 mt-2">
-              This may take a moment to initialize.
-            </p>
-          </div>
-        </div>
-      </div>
+      <Loading
+        title="Loading SQL engine..."
+        subtitle="This may take a moment to initialize"
+      />
     );
   }
 
@@ -127,18 +118,7 @@ export default function LessonPage() {
   }
 
   if (!dbInitialized) {
-    return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex items-center justify-center p-8">
-          <div className="text-center">
-            <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-lg font-medium text-gray-700">
-              Initializing database...
-            </p>
-          </div>
-        </div>
-      </div>
-    );
+    return <Loading title="Initializing database..." />;
   }
 
   if (!lesson) {
