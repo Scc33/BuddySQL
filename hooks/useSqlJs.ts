@@ -1,7 +1,6 @@
-// hooks/useSqlJs.ts
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { QueryResult, SqlResult } from "@/types/database";
 
 export function useSqlJs() {
@@ -9,15 +8,18 @@ export function useSqlJs() {
   const [db, setDb] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const isInitializing = useRef(false);
 
   useEffect(() => {
+    // Prevent multiple initialization attempts
+    if (isInitializing.current) return;
+    isInitializing.current = true;
+
     async function initializeSql() {
       try {
-        setIsLoading(true);
-
         // Check if the sql.js script is already loaded
         if (!(window as any).initSqlJs) {
-          // Load the SQL.js script from CDN
+          // Create script element
           const script = document.createElement("script");
           script.src =
             "https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js";
@@ -33,7 +35,8 @@ export function useSqlJs() {
         }
 
         // Initialize SQL.js
-        const SQL = await (window as any).initSqlJs({
+        const initSqlJs = (window as any).initSqlJs;
+        const SQL = await initSqlJs({
           locateFile: (file) =>
             `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/${file}`,
         });
@@ -49,6 +52,7 @@ export function useSqlJs() {
         setError("Failed to load SQL engine. Please refresh the page.");
       } finally {
         setIsLoading(false);
+        isInitializing.current = false;
       }
     }
 
@@ -64,7 +68,7 @@ export function useSqlJs() {
         }
       }
     };
-  }, []);
+  }, []); // Empty dependency array to run only once
 
   // Function to execute SQL queries
   const executeQuery = (sql: string): QueryResult => {

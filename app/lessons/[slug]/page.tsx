@@ -1,12 +1,12 @@
+// app/lessons/[slug]/page.tsx
 "use client";
 
 import { useEffect, useState } from "react";
-import { notFound, useRouter } from "next/navigation";
+import { notFound } from "next/navigation";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { SqlEditor } from "@/components/lessons/SqlEditor";
 import { LessonContent } from "@/components/lessons/LessonContent";
 import LessonNavigation from "@/components/lessons/LessonNavigation";
-import { useSqlJs } from "@/hooks/useSqlJs";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import {
   getLessonBySlug,
@@ -15,14 +15,13 @@ import {
   initializeDatabase,
 } from "@/lib/lessons";
 import { UserProgress, LessonProgress } from "@/types/lesson";
+import { useSqlJs } from "@/hooks/useSqlJs";
 
 const initialProgress: UserProgress = {
   lessons: {},
 };
 
 export default function LessonPage({ params }: { params: { slug: string } }) {
-  const router = useRouter();
-  const [isLoading, setIsLoading] = useState(true);
   const [lesson, setLesson] = useState<any>(null);
   const [userProgress, setUserProgress] = useLocalStorage<UserProgress>(
     "sql-playground-progress",
@@ -33,8 +32,15 @@ export default function LessonPage({ params }: { params: { slug: string } }) {
   });
   const [showChallenge, setShowChallenge] = useState(false);
   const [challengeSuccess, setChallengeSuccess] = useState(false);
+  const [dbInitialized, setDbInitialized] = useState(false);
 
-  const { db, error, executeQuery, initializeDatabase: initDb } = useSqlJs();
+  const {
+    isLoading,
+    error,
+    executeQuery,
+    initializeDatabase: initDb,
+    db,
+  } = useSqlJs();
 
   // Load lesson data based on slug
   useEffect(() => {
@@ -65,17 +71,68 @@ export default function LessonPage({ params }: { params: { slug: string } }) {
     }));
   }, [params.slug, userProgress.lessons, setUserProgress]);
 
-  // Initialize the database
+  // Initialize the database once when ready
   useEffect(() => {
-    if (db) {
+    if (db && !dbInitialized) {
       const sql = initializeDatabase();
-      if (initDb(sql)) {
-        setIsLoading(false);
+      const success = initDb(sql);
+      if (success) {
+        setDbInitialized(true);
       }
     }
-  }, [db, initDb]);
+  }, [db, dbInitialized, initDb]);
 
-  if (!lesson || isLoading) {
+  // Loading states
+  if (isLoading) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex items-center justify-center p-8">
+          <div className="text-center">
+            <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-lg font-medium text-gray-700">
+              Loading SQL engine...
+            </p>
+            <p className="text-sm text-gray-500 mt-2">
+              This may take a moment to initialize.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="p-6 bg-red-50 border border-red-200 rounded-lg">
+          <h3 className="text-lg font-medium text-red-800 mb-2">
+            Error Loading SQL Engine
+          </h3>
+          <p className="text-red-700">{error}</p>
+          <p className="mt-4 text-red-600">
+            Try refreshing the page or check your console for more details.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!dbInitialized) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex items-center justify-center p-8">
+          <div className="text-center">
+            <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-lg font-medium text-gray-700">
+              Initializing database...
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!lesson) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="animate-pulse">
