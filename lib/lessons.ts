@@ -361,7 +361,6 @@ export function getPreviousLesson(currentLessonId: string): Lesson | undefined {
 export const lessonCategories = [
   { name: "basics", label: "SQL Basics" },
   { name: "intermediate", label: "Intermediate SQL" },
-  { name: "advanced", label: "Advanced SQL" },
 ];
 
 export function initializeDatabase() {

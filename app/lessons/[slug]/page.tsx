@@ -37,10 +37,8 @@ export default function LessonPage() {
   const [lessonProgress, setLessonProgress] = useState<LessonProgress>({
     completed: false,
   });
-  const [showChallenge, setShowChallenge] = useState(false);
   const [challengeSuccess, setChallengeSuccess] = useState(false);
   const [dbInitialized, setDbInitialized] = useState(false);
-  const [gradeOptions, setGradeOptions] = useState<GradeOptions>({});
   const [challengeGradeOptions, setChallengeGradeOptions] =
     useState<GradeOptions>({});
 
@@ -60,7 +58,6 @@ export default function LessonPage() {
     setLesson(lessonData);
 
     // Set grading options for this lesson
-    setGradeOptions(getGradeOptionsForLesson(lessonData.id, false));
     setChallengeGradeOptions(getGradeOptionsForLesson(lessonData.id, true));
 
     // Check if lesson has been completed before
@@ -72,7 +69,6 @@ export default function LessonPage() {
         lessonData.challenge &&
         userProgress.lessons[lessonData.id].completed
       ) {
-        setShowChallenge(true);
         setChallengeSuccess(true);
       }
     }
@@ -167,7 +163,7 @@ export default function LessonPage() {
 
   const previousLesson = getPreviousLesson(lesson.id);
   const nextLesson = getNextLesson(lesson.id);
-
+  console.log(lesson.challenge && " md:grid-cols-2");
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="space-y-8">
@@ -176,54 +172,39 @@ export default function LessonPage() {
           <p className="mt-2 text-lg text-gray-500">{lesson.description}</p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-8">
+        <div
+          className={"grid gap-8 " + (lesson.challenge && " md:grid-cols-2")}
+        >
           <div>
             <LessonContent content={lesson.content} />
           </div>
 
           <div className="space-y-6">
-            <SqlEditor
-              initialQuery={lesson.initialQuery || ""}
-              onExecuteQuery={handleExecuteQuery}
-              onSaveProgress={updateLessonProgress}
-              gradeOptions={gradeOptions}
-            />
+            {lesson.challenge && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Challenge</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="mb-4">{lesson.challenge.description}</p>
 
-            {lesson.challenge &&
-              (lessonProgress.completed || showChallenge) && (
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Challenge</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="mb-4">{lesson.challenge.description}</p>
-
-                    {challengeSuccess ? (
-                      <div className="p-4 bg-green-50 border border-green-200 rounded-md text-green-800">
-                        <p className="font-medium">
-                          {lesson.challenge.success_message}
-                        </p>
-                      </div>
-                    ) : (
-                      <SqlEditor
-                        initialQuery=""
-                        onExecuteQuery={handleExecuteQuery}
-                        onSaveProgress={updateLessonProgress}
-                        expectedQuery={lesson.challenge.validation_query}
-                        gradeOptions={challengeGradeOptions}
-                      />
-                    )}
-                  </CardContent>
-                </Card>
-              )}
-
-            {!showChallenge && lesson.challenge && (
-              <button
-                onClick={() => setShowChallenge(true)}
-                className="w-full py-2 px-4 border border-blue-500 text-blue-500 rounded-md hover:bg-blue-50 cursor-pointer"
-              >
-                Show Challenge
-              </button>
+                  {challengeSuccess ? (
+                    <div className="p-4 bg-green-50 border border-green-200 rounded-md text-green-800">
+                      <p className="font-medium">
+                        {lesson.challenge.success_message}
+                      </p>
+                    </div>
+                  ) : (
+                    <SqlEditor
+                      initialQuery={lesson.initialQuery}
+                      onExecuteQuery={handleExecuteQuery}
+                      onSaveProgress={updateLessonProgress}
+                      expectedQuery={lesson.challenge.validation_query}
+                      gradeOptions={challengeGradeOptions}
+                    />
+                  )}
+                </CardContent>
+              </Card>
             )}
           </div>
         </div>
