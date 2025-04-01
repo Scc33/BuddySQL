@@ -183,10 +183,12 @@ export default function LessonPage() {
             {lesson.challenge && (
               <Card>
                 <CardHeader>
-                  <CardTitle>Challenge</CardTitle>
+                  <CardTitle id="challenge-section">Challenge</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="mb-4">{lesson.challenge.description}</p>
+                  <p className="mb-4" aria-describedby="challenge-section">
+                    {lesson.challenge.description}
+                  </p>
 
                   {challengeSuccess && (
                     <div className="p-4 bg-green-50 border border-green-200 rounded-md text-green-800">

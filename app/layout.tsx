@@ -1,8 +1,10 @@
 import "./globals.css";
-import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import { defaultMetadata } from "./sitemapmetadata";
+
+export const metadata = defaultMetadata;
 
 // Load Inter font
 const inter = Inter({
@@ -10,12 +12,6 @@ const inter = Inter({
   display: "swap",
   variable: "--font-inter",
 });
-
-export const metadata: Metadata = {
-  title: "SQL Playground - Learn SQL in Your Browser",
-  description:
-    "Interactive SQL tutorials and exercises to help you learn SQL basics in your browser",
-};
 
 export default function RootLayout({
   children,
