@@ -84,9 +84,6 @@ export const SqlEditor: React.FC<SqlEditorProps> = ({
           placeholder="Type your SQL query here..."
         />
         <div className="mt-3 flex justify-between items-center">
-          <div className="text-sm text-gray-500">
-            Press Ctrl+Enter to run query
-          </div>
           <button
             onClick={executeQuery}
             disabled={isLoading}
