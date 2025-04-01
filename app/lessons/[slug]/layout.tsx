@@ -1,11 +1,10 @@
 import { Metadata } from "next";
 import { getLessonBySlug } from "@/lib/lessons";
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { slug: string };
+export async function generateMetadata(props: {
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
+  const params = await props.params;
   const lesson = getLessonBySlug(params.slug);
 
   if (!lesson) {
@@ -18,6 +17,14 @@ export async function generateMetadata({
     openGraph: {
       title: `${lesson.title} | SQL Playground`,
       description: lesson.description,
+      images: [
+        {
+          url: "/images/sql-playground-og.png",
+          width: 1200,
+          height: 630,
+          alt: "SQL Playground",
+        },
+      ],
     },
   };
 }
