@@ -6,14 +6,15 @@ import LessonCard from "@/components/lessons/LessonCard";
 import { lessons, lessonCategories } from "@/lib/lessons";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { UserProgress } from "@/types/lesson";
+import { PLAYGROUND_KEY } from "@/constants/keys";
 
 const initialProgress: UserProgress = {
   lessons: {},
 };
 
 export default function LessonsPage() {
-  const [userProgress, setUserProgress] = useLocalStorage<UserProgress>(
-    "sql-playground-progress",
+  const [userProgress] = useLocalStorage<UserProgress>(
+    PLAYGROUND_KEY,
     initialProgress
   );
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);

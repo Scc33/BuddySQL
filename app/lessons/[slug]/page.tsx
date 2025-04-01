@@ -1,4 +1,3 @@
-// app/lessons/[slug]/page.tsx
 "use client";
 
 import { useEffect, useRef, useState } from "react";
@@ -19,6 +18,7 @@ import { useSqlJs } from "@/hooks/useSqlJs";
 import Loading from "@/components/ui/loading";
 import { getGradeOptionsForLesson } from "@/lib/lessonGrader";
 import { GradeOptions } from "@/lib/queryGrader";
+import { PLAYGROUND_KEY } from "@/constants/keys";
 
 const initialProgress: UserProgress = {
   lessons: {},
@@ -31,7 +31,7 @@ export default function LessonPage() {
 
   const [lesson, setLesson] = useState<any>(null);
   const [userProgress, setUserProgress] = useLocalStorage<UserProgress>(
-    "sql-playground-progress",
+    PLAYGROUND_KEY,
     initialProgress
   );
   const [lessonProgress, setLessonProgress] = useState<LessonProgress>({
