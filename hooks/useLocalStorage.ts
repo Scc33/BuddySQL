@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 export function useLocalStorage<T>(
   key: string,
   initialValue: T
-): [T, (value: T | ((val: T) => T)) => void] {
+): [T, (value: T | ((val: T) => T)) => void, () => void] {
   // State to store our value
   const [storedValue, setStoredValue] = useState<T>(initialValue);
 
@@ -42,5 +42,18 @@ export function useLocalStorage<T>(
     }
   };
 
-  return [storedValue, setValue];
+  const removeValue = () => {
+    try {
+      // Remove from localStorage
+      if (typeof window !== "undefined") {
+        window.localStorage.removeItem(key);
+      }
+      // Reset state to initial value
+      setStoredValue(initialValue);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  return [storedValue, setValue, removeValue];
 }

@@ -13,7 +13,7 @@ const initialProgress: UserProgress = {
 };
 
 export default function LessonsPage() {
-  const [userProgress] = useLocalStorage<UserProgress>(
+  const [userProgress, , removeValue] = useLocalStorage<UserProgress>(
     PLAYGROUND_KEY,
     initialProgress
   );
@@ -52,6 +52,12 @@ export default function LessonsPage() {
   const progressPercentage =
     totalLessons > 0 ? Math.round((totalCompleted / totalLessons) * 100) : 0;
 
+  const handleReset = () => {
+    if (window.confirm("Are you sure you want to reset all your progress?")) {
+      removeValue();
+    }
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="space-y-8">
@@ -59,6 +65,14 @@ export default function LessonsPage() {
         <Card>
           <CardHeader>
             <CardTitle>Your Progress</CardTitle>
+            <div className="flex justify-end">
+              <button
+                onClick={handleReset}
+                className="px-3 py-1 text-sm text-red-600 border border-red-300 rounded-md hover:bg-red-50 cursor-pointer w-fit"
+              >
+                Reset Progress
+              </button>
+            </div>
           </CardHeader>
           <CardContent>
             <div className="flex items-center">

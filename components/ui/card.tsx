@@ -21,7 +21,11 @@ interface CardHeaderProps {
 }
 
 export function CardHeader({ children, className = "" }: CardHeaderProps) {
-  return <div className={`px-6 py-4 border-b ${className}`}>{children}</div>;
+  return (
+    <div className={`grid grid-cols-2 px-6 py-4 border-b ${className}`}>
+      {children}
+    </div>
+  );
 }
 
 interface CardTitleProps {
