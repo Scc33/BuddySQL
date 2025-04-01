@@ -13,7 +13,7 @@ import {
   getPreviousLesson,
   initializeDatabase,
 } from "@/lib/lessons";
-import { UserProgress, LessonProgress } from "@/types/lesson";
+import { UserProgress, LessonProgress, Lesson } from "@/types/lesson";
 import { useSqlJs } from "@/hooks/useSqlJs";
 import Loading from "@/components/ui/loading";
 import { getGradeOptionsForLesson } from "@/lib/lessonGrader";
@@ -29,7 +29,7 @@ export default function LessonPage() {
   const slug = params.slug as string;
   const initialRender = useRef(true);
 
-  const [lesson, setLesson] = useState<any>(null);
+  const [lesson, setLesson] = useState<Lesson>();
   const [userProgress, setUserProgress] = useLocalStorage<UserProgress>(
     PLAYGROUND_KEY,
     initialProgress
@@ -58,7 +58,7 @@ export default function LessonPage() {
     setLesson(lessonData);
 
     // Set grading options for this lesson
-    setChallengeGradeOptions(getGradeOptionsForLesson(lessonData.id, true));
+    setChallengeGradeOptions(getGradeOptionsForLesson(lessonData.id));
 
     // Check if lesson has been completed before
     if (userProgress.lessons[lessonData.id]) {

@@ -7,7 +7,7 @@ import { gradeQuery, GradeOptions, GradeResult } from "@/lib/queryGrader";
 import QueryFeedback from "./QueryFeedback";
 
 interface SqlEditorProps {
-  initialQuery: string;
+  initialQuery: string | undefined;
   onExecuteQuery: (sql: string) => QueryResult;
   onSaveProgress?: (completed: boolean, query: string) => void;
   expectedQuery?: string;

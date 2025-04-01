@@ -5,7 +5,6 @@ import ReactMarkdown from "react-markdown";
 import { Card, CardContent } from "@/components/ui/card";
 
 interface CodeProps {
-  node?: any;
   className?: string;
   children?: React.ReactNode;
 }
@@ -69,23 +68,19 @@ export const LessonContent: React.FC<LessonContentProps> = ({ content }) => {
       <CardContent className="prose max-w-none py-6">
         <ReactMarkdown
           components={{
-            h1: ({ node, ...props }) => (
+            h1: (props) => (
               <h1 className="text-2xl font-bold mb-4 mt-2" {...props} />
             ),
-            h2: ({ node, ...props }) => (
+            h2: (props) => (
               <h2 className="text-xl font-semibold mb-3 mt-6" {...props} />
             ),
-            h3: ({ node, ...props }) => (
+            h3: (props) => (
               <h3 className="text-lg font-medium mb-2 mt-4" {...props} />
             ),
-            p: ({ node, ...props }) => <div className="my-3" {...props} />,
-            ul: ({ node, ...props }) => (
-              <ul className="list-disc pl-6 my-3" {...props} />
-            ),
-            ol: ({ node, ...props }) => (
-              <ol className="list-decimal pl-6 my-3" {...props} />
-            ),
-            li: ({ node, ...props }) => <li className="mb-1" {...props} />,
+            p: (props) => <div className="my-3" {...props} />,
+            ul: (props) => <ul className="list-disc pl-6 my-3" {...props} />,
+            ol: (props) => <ol className="list-decimal pl-6 my-3" {...props} />,
+            li: (props) => <li className="mb-1" {...props} />,
             code: CodeBlock,
           }}
         >
