@@ -21,9 +21,18 @@ export default function Footer() {
             href="https://portfolio.seancoughlin.me"
             className="text-gray-400 hover:text-gray-500"
           >
-            <span className="sr-only">Privacy</span>
+            <span className="sr-only">Portfolio</span>
             <span className="text-sm text-gray-500 hover:text-gray-900">
               Portfolio
+            </span>
+          </a>
+          <a
+            href="https://github.com/sql-js/sql.js"
+            className="text-gray-400 hover:text-gray-500"
+          >
+            <span className="sr-only">Built with SQL.js</span>
+            <span className="text-sm text-gray-500 hover:text-gray-900">
+              Built with sql.js
             </span>
           </a>
         </div>
