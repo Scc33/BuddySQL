@@ -188,21 +188,20 @@ export default function LessonPage() {
                 <CardContent>
                   <p className="mb-4">{lesson.challenge.description}</p>
 
-                  {challengeSuccess ? (
+                  {challengeSuccess && (
                     <div className="p-4 bg-green-50 border border-green-200 rounded-md text-green-800">
                       <p className="font-medium">
                         {lesson.challenge.success_message}
                       </p>
                     </div>
-                  ) : (
-                    <SqlEditor
-                      initialQuery={lesson.initialQuery}
-                      onExecuteQuery={handleExecuteQuery}
-                      onSaveProgress={updateLessonProgress}
-                      expectedQuery={lesson.challenge.validation_query}
-                      gradeOptions={challengeGradeOptions}
-                    />
                   )}
+                  <SqlEditor
+                    initialQuery={lesson.initialQuery}
+                    onExecuteQuery={handleExecuteQuery}
+                    onSaveProgress={updateLessonProgress}
+                    expectedQuery={lesson.challenge.validation_query}
+                    gradeOptions={challengeGradeOptions}
+                  />
                 </CardContent>
               </Card>
             )}

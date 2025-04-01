@@ -36,6 +36,11 @@ The asterisk (\`*\`) means "all columns" - so this query asks for all data from 
     order: 1,
     category: "basics",
     initialQuery: "SELECT * FROM Customers;",
+    challenge: {
+      description: "Write a query to select from the customers table",
+      success_message: "Great job! You're well on your way to learning SQL!",
+      validation_query: "SELECT * FROM Customers;",
+    },
   },
   {
     id: "2",
