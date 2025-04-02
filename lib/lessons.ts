@@ -139,6 +139,63 @@ Try running this query in the editor!
   },
   {
     id: "4",
+    slug: "pattern-matching",
+    title: "Pattern Matching with LIKE",
+    description: "Learn how to search for text patterns in your data",
+    content: `
+# Pattern Matching with LIKE
+
+The LIKE operator allows you to search for patterns within text data, which is perfect for partial matches or when you don't know the exact text you're looking for.
+
+## Basic Syntax
+
+\`\`\`sql
+SELECT column1, column2, ...
+FROM table_name
+WHERE column LIKE pattern;
+\`\`\`
+
+## Wildcard Characters
+
+The LIKE operator uses special wildcard characters:
+
+- **%** (percent sign): Represents zero, one, or multiple characters
+- **_** (underscore): Represents a single character
+
+## Common Pattern Examples
+
+- \`'apple%'\`: Matches any string that starts with "apple"
+- \`'%apple'\`: Matches any string that ends with "apple"
+- \`'%apple%'\`: Matches any string containing "apple" anywhere
+- \`'_pple'\`: Matches exactly 5 characters where the last 4 are "pple"
+- \`'a_p_e'\`: Matches 5-letter words with 'a' at position 1, 'p' at position 3, and 'e' at position 5
+
+## Try It Out
+
+Let's find all products with names containing the word "Phone":
+
+\`\`\`sql
+SELECT name, price, category 
+FROM Products 
+WHERE name LIKE '%Phone%';
+\`\`\`
+
+Try running this query to see the results!
+    `,
+    order: 4,
+    category: "basics",
+    initialQuery:
+      "SELECT name, price, category FROM Products WHERE name LIKE '%Phone%';",
+    challenge: {
+      description:
+        "Write a query to find all customers whose last name starts with the letter 'S'.",
+      success_message:
+        "Excellent! You've successfully used pattern matching to search for specific text patterns.",
+      validation_query: "SELECT * FROM Customers WHERE last_name LIKE 'S%';",
+    },
+  },
+  {
+    id: "5",
     slug: "sorting-results",
     title: "Sorting Results",
     description: "Learn how to sort query results using ORDER BY",
@@ -172,7 +229,7 @@ ORDER BY price DESC;
 
 Try running this query to see the results!
     `,
-    order: 4,
+    order: 5,
     category: "basics",
     initialQuery:
       "SELECT name, price, category FROM Products ORDER BY price DESC;",
@@ -185,7 +242,7 @@ Try running this query to see the results!
     },
   },
   {
-    id: "5",
+    id: "6",
     slug: "aggregate-functions",
     title: "Aggregate Functions",
     description: "Learn how to use COUNT, SUM, AVG, MIN, and MAX functions",
@@ -224,7 +281,7 @@ SELECT MIN(price) AS lowest_price, MAX(price) AS highest_price FROM Products;
 
 Try running each of these examples to see the results!
     `,
-    order: 5,
+    order: 6,
     category: "intermediate",
     initialQuery: "SELECT COUNT(*) AS total_products FROM Products;",
     challenge: {
@@ -236,7 +293,7 @@ Try running each of these examples to see the results!
     },
   },
   {
-    id: "6",
+    id: "7",
     slug: "group-by",
     title: "Grouping Data",
     description:
@@ -274,7 +331,7 @@ GROUP BY category;
 
 Try running these queries to see how GROUP BY works!
     `,
-    order: 6,
+    order: 7,
     category: "intermediate",
     initialQuery:
       "SELECT category, COUNT(*) AS product_count FROM Products GROUP BY category;",
@@ -288,7 +345,7 @@ Try running these queries to see how GROUP BY works!
     },
   },
   {
-    id: "7",
+    id: "8",
     slug: "joins-basics",
     title: "Basic JOINs",
     description: "Learn how to combine data from multiple tables",
@@ -323,7 +380,7 @@ In this query:
 
 Try running this query to see the results!
     `,
-    order: 7,
+    order: 8,
     category: "intermediate",
     initialQuery:
       "SELECT c.first_name, c.last_name, o.order_id, o.order_date, o.total_amount FROM Customers c INNER JOIN Orders o ON c.customer_id = o.customer_id;",

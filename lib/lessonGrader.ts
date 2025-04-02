@@ -1,8 +1,5 @@
 import { GradeOptions } from "./queryGrader";
 
-/**
- * Returns the appropriate grading options for a specific lesson
- */
 export function getGradeOptionsForLesson(lessonId: string): GradeOptions {
   // Define grading options based on lesson ID and whether it's a challenge
   switch (lessonId) {
@@ -35,7 +32,26 @@ export function getGradeOptionsForLesson(lessonId: string): GradeOptions {
           "String values need to be enclosed in single quotes: 'Electronics'",
         ],
       };
-    case "4": // Sorting Results
+    case "4": // Pattern Matching with LIKE
+      return {
+        mustContain: [
+          "SELECT",
+          "FROM",
+          "Customers",
+          "WHERE",
+          "last_name",
+          "LIKE",
+          "S%",
+        ],
+        expectedRows: 1, // Number of customers with last name starting with S
+        hints: [
+          "Use the LIKE operator for pattern matching",
+          "The % wildcard represents any number of characters",
+          "To find names starting with 'S', use the pattern 'S%'",
+          "Make sure to use single quotes around your pattern: 'S%'",
+        ],
+      };
+    case "5": // Sorting Results
       return {
         mustContain: ["SELECT", "FROM", "Customers", "ORDER BY", "last_name"],
         hints: [
@@ -44,7 +60,7 @@ export function getGradeOptionsForLesson(lessonId: string): GradeOptions {
           "ASC (ascending) is the default sort order, so you don't need to specify it",
         ],
       };
-    case "5": // Aggregate Functions
+    case "6": // Aggregate Functions
       return {
         mustContain: ["SELECT", "SUM", "total_amount", "FROM", "Orders"],
         hints: [
@@ -52,7 +68,7 @@ export function getGradeOptionsForLesson(lessonId: string): GradeOptions {
           "Apply it to the total_amount column in the Orders table",
         ],
       };
-    case "6": // Grouping Data
+    case "7": // Grouping Data
       return {
         mustContain: [
           "SELECT",
@@ -69,7 +85,7 @@ export function getGradeOptionsForLesson(lessonId: string): GradeOptions {
           "Use SUM to calculate the total amount spent by each customer",
         ],
       };
-    case "7": // Basic JOINs
+    case "8": // Basic JOINs
       return {
         mustContain: [
           "SELECT",
