@@ -5,6 +5,7 @@ export function getGradeOptionsForLesson(lessonId: string): GradeOptions {
   switch (lessonId) {
     case "1": // Introduction to SQL
       return {}; // No challenge for lesson 1
+
     case "2": // SELECT Basics
       return {
         mustContain: ["SELECT", "name", "price", "FROM", "Products"],
@@ -15,6 +16,7 @@ export function getGradeOptionsForLesson(lessonId: string): GradeOptions {
           "Check that you're selecting from the Products table",
         ],
       };
+
     case "3": // Filtering with WHERE
       return {
         mustContain: [
@@ -32,6 +34,7 @@ export function getGradeOptionsForLesson(lessonId: string): GradeOptions {
           "String values need to be enclosed in single quotes: 'Electronics'",
         ],
       };
+
     case "4": // Pattern Matching with LIKE
       return {
         mustContain: [
@@ -51,7 +54,29 @@ export function getGradeOptionsForLesson(lessonId: string): GradeOptions {
           "Make sure to use single quotes around your pattern: 'S%'",
         ],
       };
-    case "5": // Sorting Results
+
+    case "5": // NULL Values
+      return {
+        mustContain: [
+          "SELECT",
+          "FROM",
+          "Products",
+          "WHERE",
+          "description",
+          "IS NOT NULL",
+          "AND",
+          "price",
+          ">",
+          "50",
+        ],
+        hints: [
+          "Use IS NOT NULL to find products with a description",
+          "Combine with AND and a condition on price",
+          "Remember that you can't use = NULL or != NULL; you must use IS NULL or IS NOT NULL",
+        ],
+      };
+
+    case "6": // Sorting Results
       return {
         mustContain: ["SELECT", "FROM", "Customers", "ORDER BY", "last_name"],
         hints: [
@@ -60,7 +85,8 @@ export function getGradeOptionsForLesson(lessonId: string): GradeOptions {
           "ASC (ascending) is the default sort order, so you don't need to specify it",
         ],
       };
-    case "6": // Aggregate Functions
+
+    case "7": // Aggregate Functions
       return {
         mustContain: ["SELECT", "SUM", "total_amount", "FROM", "Orders"],
         hints: [
@@ -68,7 +94,8 @@ export function getGradeOptionsForLesson(lessonId: string): GradeOptions {
           "Apply it to the total_amount column in the Orders table",
         ],
       };
-    case "7": // Grouping Data
+
+    case "8": // Grouping Data
       return {
         mustContain: [
           "SELECT",
@@ -85,7 +112,8 @@ export function getGradeOptionsForLesson(lessonId: string): GradeOptions {
           "Use SUM to calculate the total amount spent by each customer",
         ],
       };
-    case "8": // Basic JOINs
+
+    case "9": // Basic JOINs
       return {
         mustContain: [
           "SELECT",

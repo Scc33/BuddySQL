@@ -196,6 +196,84 @@ Try running this query to see the results!
   },
   {
     id: "5",
+    slug: "null-values",
+    title: "Working with NULL Values",
+    description: "Learn how to handle missing data in SQL databases",
+    content: `
+# Understanding NULL Values in SQL
+
+In the world of databases, NULL represents the absence of a value—it's not zero, an empty string, or false; it's the database's way of saying "this information is unknown or doesn't exist."
+
+## What Makes NULL Special?
+
+NULLs behave differently from other values in several important ways:
+
+- NULL is not equal to anything, not even to another NULL
+- Comparing NULL with any value (including NULL) using standard operators always results in UNKNOWN
+- UNKNOWN is neither TRUE nor FALSE—it's a third logical state
+
+## How to Check for NULL Values
+
+Since \`column = NULL\` doesn't work as expected, SQL provides special operators:
+
+- \`IS NULL\` - checks if a value is NULL
+- \`IS NOT NULL\` - checks if a value is not NULL
+
+## Examples of NULL Handling
+
+Let's see how to find products that don't have a description:
+
+\`\`\`sql
+SELECT name, price, description 
+FROM Products 
+WHERE description IS NULL;
+\`\`\`
+
+To find products that do have a description:
+
+\`\`\`sql
+SELECT name, price, description 
+FROM Products 
+WHERE description IS NOT NULL;
+\`\`\`
+
+## The COALESCE Function
+
+The COALESCE function provides a powerful way to handle NULL values by returning the first non-NULL value from a list of expressions:
+
+\`\`\`sql
+SELECT name, 
+       price, 
+       COALESCE(description, 'No description available') AS description
+FROM Products;
+\`\`\`
+
+This query replaces NULL descriptions with the text "No description available."
+
+## Common NULL Pitfalls
+
+- NULLs in arithmetic operations: Any arithmetic with NULL results in NULL
+- NULLs in WHERE conditions: Rows where the condition evaluates to NULL (not TRUE or FALSE) are not included
+- NULLs in GROUP BY: All NULL values are grouped together
+- NULLs in JOIN conditions: Rows with NULL values in join columns won't match
+
+Try running these queries to see how NULL values behave in our database!
+  `,
+    order: 5,
+    category: "basics",
+    initialQuery:
+      "SELECT name, price, COALESCE(description, 'No description available') AS description FROM Products;",
+    challenge: {
+      description:
+        "Write a query to find all products that have a description (are NOT NULL) and cost more than $50.",
+      success_message:
+        "Excellent! You've successfully combined NULL handling with other conditions to filter data properly.",
+      validation_query:
+        "SELECT * FROM Products WHERE description IS NOT NULL AND price > 50;",
+    },
+  },
+  {
+    id: "6",
     slug: "sorting-results",
     title: "Sorting Results",
     description: "Learn how to sort query results using ORDER BY",
@@ -229,7 +307,7 @@ ORDER BY price DESC;
 
 Try running this query to see the results!
     `,
-    order: 5,
+    order: 6,
     category: "basics",
     initialQuery:
       "SELECT name, price, category FROM Products ORDER BY price DESC;",
@@ -242,7 +320,7 @@ Try running this query to see the results!
     },
   },
   {
-    id: "6",
+    id: "7",
     slug: "aggregate-functions",
     title: "Aggregate Functions",
     description: "Learn how to use COUNT, SUM, AVG, MIN, and MAX functions",
@@ -281,7 +359,7 @@ SELECT MIN(price) AS lowest_price, MAX(price) AS highest_price FROM Products;
 
 Try running each of these examples to see the results!
     `,
-    order: 6,
+    order: 7,
     category: "intermediate",
     initialQuery: "SELECT COUNT(*) AS total_products FROM Products;",
     challenge: {
@@ -293,7 +371,7 @@ Try running each of these examples to see the results!
     },
   },
   {
-    id: "7",
+    id: "8",
     slug: "group-by",
     title: "Grouping Data",
     description:
@@ -331,7 +409,7 @@ GROUP BY category;
 
 Try running these queries to see how GROUP BY works!
     `,
-    order: 7,
+    order: 8,
     category: "intermediate",
     initialQuery:
       "SELECT category, COUNT(*) AS product_count FROM Products GROUP BY category;",
@@ -345,7 +423,7 @@ Try running these queries to see how GROUP BY works!
     },
   },
   {
-    id: "8",
+    id: "9",
     slug: "joins-basics",
     title: "Basic JOINs",
     description: "Learn how to combine data from multiple tables",
@@ -380,7 +458,7 @@ In this query:
 
 Try running this query to see the results!
     `,
-    order: 8,
+    order: 9,
     category: "intermediate",
     initialQuery:
       "SELECT c.first_name, c.last_name, o.order_id, o.order_date, o.total_amount FROM Customers c INNER JOIN Orders o ON c.customer_id = o.customer_id;",
