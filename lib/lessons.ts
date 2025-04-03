@@ -621,69 +621,69 @@ Try running this query to see the results!
     description:
       "Learn how to retrieve all records from the left table and matching records from the right table",
     content: `
-  # Understanding LEFT JOIN
-  
-  A LEFT JOIN (or LEFT OUTER JOIN) returns all records from the left table (the first table in the JOIN clause), and the matching records from the right table. If there is no match in the right table, NULL values are returned for right table columns.
-  
-  ## LEFT JOIN Syntax
-  
-  \`\`\`sql
-  SELECT column(s)
-  FROM table1
-  LEFT JOIN table2 ON table1.column = table2.column;
-  \`\`\`
-  
-  ## LEFT JOIN Visualization
-  
-  \`\`\`
-  ┌────────────┐     ┌────────────┐
-  │  Table1    │     │  Table2    │
-  │  (LEFT)    │     │  (RIGHT)   │
-  └────────────┘     └────────────┘
-      ┌───────────────┐
-      │ Matched rows  │
-      └───────────────┘
-  ┌───────────┐
-  │ Unmatched │
-  │ rows from │
-  │ Table1    │
-  └───────────┘
-  \`\`\`
-  
-  ## When to Use LEFT JOIN
-  
-  - When you need all records from the left table, regardless of matches in the right table
-  - To find records in the left table that don't have a match in the right table
-  - To identify "orphaned" records in a database
-  
-  ## Example
-  
-  Let's get all customers and their orders. We want ALL customers, even those who haven't placed any orders:
-  
-  \`\`\`sql
-  SELECT c.customer_id, c.first_name, c.last_name, o.order_id, o.order_date
-  FROM Customers c
-  LEFT JOIN Orders o ON c.customer_id = o.customer_id
-  ORDER BY c.customer_id;
-  \`\`\`
-  
-  In the result, customers who haven't placed any orders will have NULL values for order_id and order_date.
-  
-  ## Finding Records with No Match
-  
-  You can use a LEFT JOIN with a WHERE clause to find records that don't have a match:
-  
-  \`\`\`sql
-  SELECT c.customer_id, c.first_name, c.last_name
-  FROM Customers c
-  LEFT JOIN Orders o ON c.customer_id = o.customer_id
-  WHERE o.order_id IS NULL;
-  \`\`\`
-  
-  This query finds customers who haven't placed any orders.
-  
-  Try running these examples to see LEFT JOIN in action!
-    `,
+# Understanding LEFT JOIN
+
+A LEFT JOIN (or LEFT OUTER JOIN) returns all records from the left table (the first table in the JOIN clause), and the matching records from the right table. If there is no match in the right table, NULL values are returned for right table columns.
+
+## LEFT JOIN Syntax
+
+\`\`\`sql
+SELECT column(s)
+FROM table1
+LEFT JOIN table2 ON table1.column = table2.column;
+\`\`\`
+
+## LEFT JOIN Visualization
+
+\`\`\`
+┌────────────┐     ┌────────────┐
+│  Table1    │     │  Table2    │
+│  (LEFT)    │     │  (RIGHT)   │
+└────────────┘     └────────────┘
+    ┌───────────────┐
+    │ Matched rows  │
+    └───────────────┘
+┌───────────┐
+│ Unmatched │
+│ rows from │
+│ Table1    │
+└───────────┘
+\`\`\`
+
+## When to Use LEFT JOIN
+
+- When you need all records from the left table, regardless of matches in the right table
+- To find records in the left table that don't have a match in the right table
+- To identify "orphaned" records in a database
+
+## Example
+
+Let's get all customers and their orders. We want ALL customers, even those who haven't placed any orders:
+
+\`\`\`sql
+SELECT c.customer_id, c.first_name, c.last_name, o.order_id, o.order_date
+FROM Customers c
+LEFT JOIN Orders o ON c.customer_id = o.customer_id
+ORDER BY c.customer_id;
+\`\`\`
+
+In the result, customers who haven't placed any orders will have NULL values for order_id and order_date.
+
+## Finding Records with No Match
+
+You can use a LEFT JOIN with a WHERE clause to find records that don't have a match:
+
+\`\`\`sql
+SELECT c.customer_id, c.first_name, c.last_name
+FROM Customers c
+LEFT JOIN Orders o ON c.customer_id = o.customer_id
+WHERE o.order_id IS NULL;
+\`\`\`
+
+This query finds customers who haven't placed any orders.
+
+Try running these examples to see LEFT JOIN in action!
+  `,
     order: 12,
     category: "intermediate",
     initialQuery:
@@ -695,6 +695,202 @@ Try running this query to see the results!
         "Excellent! You've successfully used LEFT JOIN to include all products, even those without orders.",
       validation_query:
         "SELECT p.product_id, p.name, oi.order_id, oi.quantity FROM Products p LEFT JOIN Order_Items oi ON p.product_id = oi.product_id ORDER BY p.product_id;",
+    },
+  },
+  {
+    id: "13",
+    slug: "right-join",
+    title: "RIGHT JOIN",
+    description:
+      "Learn how to retrieve all records from the right table and matching records from the left table",
+    content: `
+# Understanding RIGHT JOIN
+
+A RIGHT JOIN (or RIGHT OUTER JOIN) returns all records from the right table (the second table in the JOIN clause), and the matching records from the left table. If there is no match in the left table, NULL values are returned for left table columns.
+
+## RIGHT JOIN Syntax
+
+\`\`\`sql
+SELECT column(s)
+FROM table1
+RIGHT JOIN table2 ON table1.column = table2.column;
+\`\`\`
+
+## RIGHT JOIN Visualization
+
+\`\`\`
+┌────────────┐     ┌────────────┐
+│  Table1    │     │  Table2    │
+│  (LEFT)    │     │  (RIGHT)   │
+└────────────┘     └────────────┘
+    ┌───────────────┐
+    │ Matched rows  │
+    └───────────────┘
+                    ┌───────────┐
+                    │ Unmatched │
+                    │ rows from │
+                    │ Table2    │
+                    └───────────┘
+\`\`\`
+
+## When to Use RIGHT JOIN
+
+- When you need all records from the right table, regardless of matches in the left table
+- To find records in the right table that don't have a match in the left table
+- In practice, RIGHT JOIN is less common as the same result can often be achieved by swapping the tables and using a LEFT JOIN
+
+## Example
+
+Let's get all products and the order items they appear in. We want ALL products, even those that haven't been ordered:
+
+\`\`\`sql
+SELECT p.product_id, p.name, oi.order_id, oi.quantity
+FROM Order_Items oi
+RIGHT JOIN Products p ON oi.product_id = p.product_id
+ORDER BY p.product_id;
+\`\`\`
+
+This is equivalent to the LEFT JOIN example from the previous lesson, but with the tables switched.
+
+## Finding Records with No Match
+
+You can use a RIGHT JOIN with a WHERE clause to find records that don't have a match:
+
+\`\`\`sql
+SELECT p.product_id, p.name
+FROM Order_Items oi
+RIGHT JOIN Products p ON oi.product_id = p.product_id
+WHERE oi.item_id IS NULL;
+\`\`\`
+
+This query finds products that haven't been ordered.
+
+Try running these examples to see RIGHT JOIN in action!
+  `,
+    order: 13,
+    category: "intermediate",
+    initialQuery:
+      "SELECT p.product_id, p.name, oi.order_id, oi.quantity FROM Order_Items oi RIGHT JOIN Products p ON oi.product_id = p.product_id ORDER BY p.product_id;",
+    challenge: {
+      description:
+        "Write a query using RIGHT JOIN that shows all customers and their order details, including customers without orders. (Note: You could also solve this with LEFT JOIN by switching the table order.)",
+      success_message:
+        "Well done! You've successfully used RIGHT JOIN to include all customers, even those without orders.",
+      validation_query:
+        "SELECT o.order_id, o.order_date, c.customer_id, c.first_name, c.last_name FROM Orders o RIGHT JOIN Customers c ON o.customer_id = c.customer_id ORDER BY c.customer_id;",
+    },
+  },
+  {
+    id: "14",
+    slug: "full-join",
+    title: "FULL JOIN",
+    description:
+      "Learn how to retrieve all records when there's a match in either table",
+    content: `
+# Understanding FULL JOIN
+
+A FULL JOIN (or FULL OUTER JOIN) returns all records when there is a match in either the left or right table. If there is no match, NULL values are returned for the columns from the table without a match.
+
+> Note: SQLite does not directly support FULL JOIN, but the concept is important in SQL generally. We'll learn a workaround for SQLite.
+
+## FULL JOIN Syntax (in standard SQL)
+
+\`\`\`sql
+SELECT column(s)
+FROM table1
+FULL JOIN table2 ON table1.column = table2.column;
+\`\`\`
+
+## FULL JOIN Visualization
+
+\`\`\`
+┌────────────┐     ┌────────────┐
+│  Table1    │     │  Table2    │
+│  (LEFT)    │     │  (RIGHT)   │
+└────────────┘     └────────────┘
+    ┌───────────────┐
+    │ Matched rows  │
+    └───────────────┘
+┌───────────┐     ┌───────────┐
+│ Unmatched │     │ Unmatched │
+│ rows from │     │ rows from │
+│ Table1    │     │ Table2    │
+└───────────┘     └───────────┘
+\`\`\`
+
+## When to Use FULL JOIN
+
+- When you need all records from both tables, regardless of whether there are matches
+- To identify records in either table that don't have a match in the other
+- For data integrity checks or finding "orphaned" records in either direction
+
+## SQLite FULL JOIN Workaround Using UNION
+
+Since SQLite doesn't support FULL JOIN directly, we can simulate it using UNION with LEFT JOIN and RIGHT JOIN:
+
+\`\`\`sql
+-- Get all matches and left-only records
+SELECT c.customer_id, c.first_name, c.last_name, o.order_id, o.order_date
+FROM Customers c
+LEFT JOIN Orders o ON c.customer_id = o.customer_id
+
+UNION
+
+-- Get right-only records (those not already included in the LEFT JOIN)
+SELECT c.customer_id, c.first_name, c.last_name, o.order_id, o.order_date
+FROM Customers c
+RIGHT JOIN Orders o ON c.customer_id = o.customer_id
+WHERE c.customer_id IS NULL;
+\`\`\`
+
+> Note: Since our sample database has referential integrity (all orders have valid customer IDs), this example won't actually show any additional records in the UNION portion.
+
+## Finding Unmatched Records in Either Table
+
+You can use a FULL JOIN with a WHERE clause to find records that don't have a match in either table:
+
+\`\`\`sql
+SELECT c.customer_id, c.first_name, c.last_name, o.order_id, o.order_date
+FROM Customers c
+FULL JOIN Orders o ON c.customer_id = o.customer_id
+WHERE c.customer_id IS NULL OR o.order_id IS NULL;
+\`\`\`
+
+This would find both customers without orders and orders without valid customers (though the latter shouldn't exist in our database).
+
+## SQLite Alternative Using UNION
+
+In SQLite, we'd simulate this with:
+
+\`\`\`sql
+-- Customers without orders
+SELECT c.customer_id, c.first_name, c.last_name, NULL as order_id, NULL as order_date
+FROM Customers c
+LEFT JOIN Orders o ON c.customer_id = o.customer_id
+WHERE o.order_id IS NULL
+
+UNION
+
+-- Orders without customers (shouldn't exist in our database)
+SELECT NULL as customer_id, NULL as first_name, NULL as last_name, o.order_id, o.order_date
+FROM Orders o
+LEFT JOIN Customers c ON o.customer_id = c.customer_id
+WHERE c.customer_id IS NULL;
+\`\`\`
+
+Try running these examples to understand how a FULL JOIN works conceptually!
+  `,
+    order: 14,
+    category: "intermediate",
+    initialQuery:
+      "SELECT c.customer_id, c.first_name, c.last_name, o.order_id, o.order_date FROM Customers c LEFT JOIN Orders o ON c.customer_id = o.customer_id WHERE o.order_id IS NULL;",
+    challenge: {
+      description:
+        "Use the UNION technique to write a query that mimics a FULL JOIN between Products and Order_Items tables. Show product_id, name, and order_id, finding both products that haven't been ordered and any order items without a valid product (though the latter shouldn't exist in our database).",
+      success_message:
+        "Excellent! You've successfully simulated a FULL JOIN using UNION in SQLite.",
+      validation_query:
+        "SELECT p.product_id, p.name, oi.order_id FROM Products p LEFT JOIN Order_Items oi ON p.product_id = oi.product_id WHERE oi.item_id IS NULL UNION SELECT oi.product_id, p.name, oi.order_id FROM Order_Items oi LEFT JOIN Products p ON oi.product_id = p.product_id WHERE p.product_id IS NULL;",
     },
   },
 ];
