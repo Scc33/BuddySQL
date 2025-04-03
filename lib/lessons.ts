@@ -471,6 +471,151 @@ Try running this query to see the results!
         "SELECT oi.order_id, oi.quantity, p.name, p.price FROM Order_Items oi INNER JOIN Products p ON oi.product_id = p.product_id;",
     },
   },
+  {
+    id: "10",
+    slug: "limit-clause",
+    title: "The LIMIT Clause",
+    description: "Learn how to restrict the number of rows returned by a query",
+    content: `
+  # Controlling Result Size with LIMIT
+  
+  When working with large datasets, you often don't need to retrieve all rows at once. The LIMIT clause allows you to specify exactly how many rows should be returned.
+  
+  ## The LIMIT Clause
+  
+  The LIMIT clause restricts the number of rows returned by a query.
+  
+  ### Basic Syntax
+  
+  \`\`\`sql
+  SELECT column1, column2, ...
+  FROM table_name
+  LIMIT number_of_rows;
+  \`\`\`
+  
+  ### Examples
+  
+  Retrieve only the 3 most expensive products:
+  
+  \`\`\`sql
+  SELECT name, price, category 
+  FROM Products 
+  ORDER BY price DESC 
+  LIMIT 3;
+  \`\`\`
+  
+  Show the 5 newest customers (based on join date):
+  
+  \`\`\`sql
+  SELECT customer_id, first_name, last_name, join_date 
+  FROM Customers 
+  ORDER BY join_date DESC 
+  LIMIT 5;
+  \`\`\`
+  
+  ## Practical Applications
+  
+  - **Top N Analysis**: Finding the top or bottom N items (highest sales, lowest inventory, etc.)
+  - **Previews**: Showing just a few rows when exploring a new table
+  - **Performance**: Limiting the amount of data returned to improve query performance
+  - **Data Sampling**: Getting a small sample of data for quick analysis
+  
+  ## Important Notes
+  
+  - LIMIT is typically applied after other clauses like WHERE, GROUP BY, and ORDER BY
+  - Without an ORDER BY clause, the specific rows returned can be unpredictable
+  - Different database systems might use different syntax (e.g., FETCH FIRST in some SQL dialects)
+  
+  Try running the example queries to see how LIMIT works!
+    `,
+    order: 10,
+    category: "basics",
+    initialQuery:
+      "SELECT name, price, category FROM Products ORDER BY price DESC LIMIT 3;",
+    challenge: {
+      description:
+        "Write a query to find the 5 cheapest products ordered by price.",
+      success_message:
+        "Excellent! You've successfully used LIMIT to retrieve a specific number of rows.",
+      validation_query: "SELECT * FROM Products ORDER BY price ASC LIMIT 5;",
+    },
+  },
+
+  // OFFSET lesson
+  {
+    id: "11",
+    slug: "offset-clause",
+    title: "The OFFSET Clause",
+    description: "Learn how to skip rows in your query results",
+    content: `
+  # Skipping Rows with OFFSET
+  
+  Building on our knowledge of LIMIT, SQL provides another powerful clause - OFFSET. This allows you to skip a specific number of rows before starting to return results.
+  
+  ## The OFFSET Clause
+  
+  The OFFSET clause skips a specified number of rows before starting to return rows.
+  
+  ### Basic Syntax
+  
+  \`\`\`sql
+  SELECT column1, column2, ...
+  FROM table_name
+  LIMIT number_of_rows OFFSET skip_rows;
+  \`\`\`
+  
+  ### Examples
+  
+  Retrieve the 4th to 6th most expensive products:
+  
+  \`\`\`sql
+  SELECT name, price, category 
+  FROM Products 
+  ORDER BY price DESC 
+  LIMIT 3 OFFSET 3;
+  \`\`\`
+  
+  Skip the 2 most recent customers and show the next 3:
+  
+  \`\`\`sql
+  SELECT customer_id, first_name, last_name, join_date 
+  FROM Customers 
+  ORDER BY join_date DESC 
+  LIMIT 3 OFFSET 2;
+  \`\`\`
+  
+  ## Practical Applications
+  
+  - **Pagination**: Implementing "page 2", "page 3", etc. in an application
+    - For page 1: LIMIT 10 OFFSET 0
+    - For page 2: LIMIT 10 OFFSET 10
+    - For page 3: LIMIT 10 OFFSET 20
+    - The formula is: OFFSET = (page_number - 1) * page_size
+  - **Data Analysis**: Skipping outliers or initial data points
+  - **Batch Processing**: Processing data in batches
+  
+  ## Important Notes
+  
+  - Always combine OFFSET with ORDER BY to ensure predictable results
+  - The first row in the result set has an offset of 0, not 1
+  - Using large OFFSET values on big tables can be inefficient
+  - Different database systems might have different maximums for OFFSET values
+  
+  Try running the example queries to see how OFFSET works with LIMIT!
+    `,
+    order: 11,
+    category: "basics",
+    initialQuery:
+      "SELECT name, price, category FROM Products ORDER BY price DESC LIMIT 3 OFFSET 3;",
+    challenge: {
+      description:
+        "Write a query to get the third, fourth, and fifth cheapest products ordered by price (hint: use LIMIT with OFFSET).",
+      success_message:
+        "Great job! You've successfully used OFFSET to skip rows in your query results.",
+      validation_query:
+        "SELECT * FROM Products ORDER BY price ASC LIMIT 3 OFFSET 2;",
+    },
+  },
 ];
 
 // Helper functions for lessons
