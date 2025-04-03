@@ -540,8 +540,6 @@ Try running this query to see the results!
       validation_query: "SELECT * FROM Products ORDER BY price ASC LIMIT 5;",
     },
   },
-
-  // OFFSET lesson
   {
     id: "11",
     slug: "offset-clause",
@@ -614,6 +612,89 @@ Try running this query to see the results!
         "Great job! You've successfully used OFFSET to skip rows in your query results.",
       validation_query:
         "SELECT * FROM Products ORDER BY price ASC LIMIT 3 OFFSET 2;",
+    },
+  },
+  {
+    id: "12",
+    slug: "left-join",
+    title: "LEFT JOIN",
+    description:
+      "Learn how to retrieve all records from the left table and matching records from the right table",
+    content: `
+  # Understanding LEFT JOIN
+  
+  A LEFT JOIN (or LEFT OUTER JOIN) returns all records from the left table (the first table in the JOIN clause), and the matching records from the right table. If there is no match in the right table, NULL values are returned for right table columns.
+  
+  ## LEFT JOIN Syntax
+  
+  \`\`\`sql
+  SELECT column(s)
+  FROM table1
+  LEFT JOIN table2 ON table1.column = table2.column;
+  \`\`\`
+  
+  ## LEFT JOIN Visualization
+  
+  \`\`\`
+  ┌────────────┐     ┌────────────┐
+  │  Table1    │     │  Table2    │
+  │  (LEFT)    │     │  (RIGHT)   │
+  └────────────┘     └────────────┘
+      ┌───────────────┐
+      │ Matched rows  │
+      └───────────────┘
+  ┌───────────┐
+  │ Unmatched │
+  │ rows from │
+  │ Table1    │
+  └───────────┘
+  \`\`\`
+  
+  ## When to Use LEFT JOIN
+  
+  - When you need all records from the left table, regardless of matches in the right table
+  - To find records in the left table that don't have a match in the right table
+  - To identify "orphaned" records in a database
+  
+  ## Example
+  
+  Let's get all customers and their orders. We want ALL customers, even those who haven't placed any orders:
+  
+  \`\`\`sql
+  SELECT c.customer_id, c.first_name, c.last_name, o.order_id, o.order_date
+  FROM Customers c
+  LEFT JOIN Orders o ON c.customer_id = o.customer_id
+  ORDER BY c.customer_id;
+  \`\`\`
+  
+  In the result, customers who haven't placed any orders will have NULL values for order_id and order_date.
+  
+  ## Finding Records with No Match
+  
+  You can use a LEFT JOIN with a WHERE clause to find records that don't have a match:
+  
+  \`\`\`sql
+  SELECT c.customer_id, c.first_name, c.last_name
+  FROM Customers c
+  LEFT JOIN Orders o ON c.customer_id = o.customer_id
+  WHERE o.order_id IS NULL;
+  \`\`\`
+  
+  This query finds customers who haven't placed any orders.
+  
+  Try running these examples to see LEFT JOIN in action!
+    `,
+    order: 12,
+    category: "intermediate",
+    initialQuery:
+      "SELECT c.customer_id, c.first_name, c.last_name, o.order_id, o.order_date FROM Customers c LEFT JOIN Orders o ON c.customer_id = o.customer_id ORDER BY c.customer_id;",
+    challenge: {
+      description:
+        "Write a query that shows all products and their order details, including products that have never been ordered. Sort the results by product_id.",
+      success_message:
+        "Excellent! You've successfully used LEFT JOIN to include all products, even those without orders.",
+      validation_query:
+        "SELECT p.product_id, p.name, oi.order_id, oi.quantity FROM Products p LEFT JOIN Order_Items oi ON p.product_id = oi.product_id ORDER BY p.product_id;",
     },
   },
 ];
