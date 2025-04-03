@@ -7,21 +7,41 @@ interface TableSchemaViewerProps {
   executeQuery: (sql: string) => QueryResult;
 }
 
-interface TableInfo {
-  name: string;
-  columns: string[];
-}
-
 const TableSchemaViewer: React.FC<TableSchemaViewerProps> = ({
   activeTable,
   onSelectTable,
   executeQuery,
 }) => {
-  const [tables, setTables] = useState<TableInfo[]>([]);
-  const [schema, setSchema] = useState<{ column: string; type: string; nullable: string }[]>([]);
+  const [schema, setSchema] = useState<
+    { column: string; type: string; nullable: string }[]
+  >([]);
 
   // Available tables in the database
   const tableNames = ["Customers", "Products", "Orders", "Order_Items"];
+
+  // Sample queries for each table
+  const sampleQueries = {
+    Customers: [
+      "SELECT * FROM Customers LIMIT 10;",
+      "SELECT first_name, last_name, email FROM Customers ORDER BY last_name;",
+      "SELECT * FROM Customers WHERE phone IS NOT NULL;",
+    ],
+    Products: [
+      "SELECT * FROM Products LIMIT 10;",
+      "SELECT name, price FROM Products WHERE price > 50 ORDER BY price DESC;",
+      "SELECT category, COUNT(*) as count FROM Products GROUP BY category;",
+    ],
+    Orders: [
+      "SELECT * FROM Orders LIMIT 10;",
+      "SELECT o.order_id, c.first_name, c.last_name, o.total_amount FROM Orders o JOIN Customers c ON o.customer_id = c.customer_id;",
+      "SELECT customer_id, SUM(total_amount) as total_spent FROM Orders GROUP BY customer_id ORDER BY total_spent DESC;",
+    ],
+    Order_Items: [
+      "SELECT * FROM Order_Items LIMIT 10;",
+      "SELECT oi.order_id, p.name, oi.quantity, oi.price_each FROM Order_Items oi JOIN Products p ON oi.product_id = p.product_id;",
+      "SELECT order_id, SUM(quantity * price_each) as total FROM Order_Items GROUP BY order_id;",
+    ],
+  };
 
   // Get table schema on mount or when active table changes
   useEffect(() => {
@@ -29,7 +49,7 @@ const TableSchemaViewer: React.FC<TableSchemaViewerProps> = ({
     if (activeTable) {
       const schemaQuery = `PRAGMA table_info(${activeTable});`;
       const result = executeQuery(schemaQuery);
-      
+
       if (result.results && result.results.length > 0) {
         const schemaData = result.results[0].values.map((row) => ({
           column: row[1] as string,
@@ -44,7 +64,9 @@ const TableSchemaViewer: React.FC<TableSchemaViewerProps> = ({
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-sm font-medium text-gray-700 mb-2">Available Tables</h3>
+        <h3 className="text-sm font-medium text-gray-700 mb-2">
+          Available Tables
+        </h3>
         <div className="flex flex-wrap gap-2">
           {tableNames.map((tableName) => (
             <button
@@ -63,7 +85,9 @@ const TableSchemaViewer: React.FC<TableSchemaViewerProps> = ({
       </div>
 
       <div>
-        <h3 className="text-sm font-medium text-gray-700 mb-2">Table Schema: {activeTable}</h3>
+        <h3 className="text-sm font-medium text-gray-700 mb-2">
+          Table Schema: {activeTable}
+        </h3>
         <div className="bg-gray-50 rounded-md border overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
@@ -90,7 +114,10 @@ const TableSchemaViewer: React.FC<TableSchemaViewerProps> = ({
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {schema.map((col, index) => (
-                <tr key={index} className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}>
+                <tr
+                  key={index}
+                  className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}
+                >
                   <td className="px-3 py-2 whitespace-nowrap text-xs text-gray-700">
                     {col.column}
                   </td>
@@ -112,67 +139,15 @@ const TableSchemaViewer: React.FC<TableSchemaViewerProps> = ({
           <h3 className="text-sm font-medium text-gray-700">Sample Queries</h3>
         </div>
         <div className="space-y-2">
-          <button
-            onClick={() => onSelectTable(activeTable)}
-            className="block w-full text-left px-3 py-2 text-xs bg-gray-50 hover:bg-gray-100 rounded border text-gray-700"
-          >
-            SELECT * FROM {activeTable} LIMIT 10;
-          </button>
-          
-          {activeTable === "Customers" && (
-            <>
-              <button
-                onClick={() => {
-                  const query = "SELECT first_name, last_name, email FROM Customers ORDER BY last_name;";
-                  executeQuery(query);
-                }}
-                className="block w-full text-left px-3 py-2 text-xs bg-gray-50 hover:bg-gray-100 rounded border text-gray-700"
+          {sampleQueries[activeTable as keyof typeof sampleQueries]?.map(
+            (query, index) => (
+              <div
+                key={index}
+                className="text-xs font-mono bg-gray-50 p-2 rounded border text-gray-700 overflow-x-auto"
               >
-                SELECT first_name, last_name, email FROM Customers ORDER BY last_name;
-              </button>
-            </>
-          )}
-
-          {activeTable === "Products" && (
-            <>
-              <button
-                onClick={() => {
-                  const query = "SELECT name, price FROM Products WHERE price > 50 ORDER BY price DESC;";
-                  executeQuery(query);
-                }}
-                className="block w-full text-left px-3 py-2 text-xs bg-gray-50 hover:bg-gray-100 rounded border text-gray-700"
-              >
-                SELECT name, price FROM Products WHERE price > 50 ORDER BY price DESC;
-              </button>
-            </>
-          )}
-
-          {activeTable === "Orders" && (
-            <>
-              <button
-                onClick={() => {
-                  const query = "SELECT o.order_id, c.first_name, c.last_name, o.total_amount FROM Orders o JOIN Customers c ON o.customer_id = c.customer_id;";
-                  executeQuery(query);
-                }}
-                className="block w-full text-left px-3 py-2 text-xs bg-gray-50 hover:bg-gray-100 rounded border text-gray-700"
-              >
-                SELECT o.order_id, c.first_name, c.last_name, o.total_amount FROM Orders o JOIN Customers c ON o.customer_id = c.customer_id;
-              </button>
-            </>
-          )}
-
-          {activeTable === "Order_Items" && (
-            <>
-              <button
-                onClick={() => {
-                  const query = "SELECT oi.order_id, p.name, oi.quantity, oi.price_each FROM Order_Items oi JOIN Products p ON oi.product_id = p.product_id;";
-                  executeQuery(query);
-                }}
-                className="block w-full text-left px-3 py-2 text-xs bg-gray-50 hover:bg-gray-100 rounded border text-gray-700"
-              >
-                SELECT oi.order_id, p.name, oi.quantity, oi.price_each FROM Order_Items oi JOIN Products p ON oi.product_id = p.product_id;
-              </button>
-            </>
+                {query}
+              </div>
+            )
           )}
         </div>
       </div>
