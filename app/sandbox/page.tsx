@@ -6,14 +6,10 @@ import { SqlEditor } from "@/components/lessons/SqlEditor";
 import { initializeDatabase } from "@/lib/lessons";
 import { useSqlJs } from "@/hooks/useSqlJs";
 import Loading from "@/components/ui/loading";
-import TableSchemaViewer from "@/components/Sandbox/TableSchemaViewer";
+import TableSchemaViewer from "@/components/sandbox/TableSchemaViewer";
 
 export default function SandboxPage() {
   const [dbInitialized, setDbInitialized] = useState(false);
-  const [activeTable, setActiveTable] = useState<string>("Customers");
-  const [initialQuery, setInitialQuery] = useState<string>(
-    "SELECT * FROM Customers LIMIT 10;"
-  );
 
   const {
     isLoading,
@@ -36,11 +32,6 @@ export default function SandboxPage() {
   const handleExecuteQuery = (sql: string) => {
     const result = executeQuery(sql);
     return result;
-  };
-
-  const handleTableSelect = (tableName: string) => {
-    setActiveTable(tableName);
-    setInitialQuery(`SELECT * FROM ${tableName} LIMIT 10;`);
   };
 
   if (isLoading) {
@@ -90,11 +81,7 @@ export default function SandboxPage() {
                 <CardTitle>Database Tables</CardTitle>
               </CardHeader>
               <CardContent>
-                <TableSchemaViewer
-                  activeTable={activeTable}
-                  onSelectTable={handleTableSelect}
-                  executeQuery={executeQuery}
-                />
+                <TableSchemaViewer executeQuery={executeQuery} />
               </CardContent>
             </Card>
           </div>
@@ -110,7 +97,7 @@ export default function SandboxPage() {
                   exploring the different tables!
                 </p>
                 <SqlEditor
-                  initialQuery={initialQuery}
+                  initialQuery={"SELECT * FROM Customers LIMIT 10;"}
                   onExecuteQuery={handleExecuteQuery}
                   disableFeedback={true}
                 />

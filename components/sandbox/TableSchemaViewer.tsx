@@ -2,16 +2,13 @@ import React, { useEffect, useState } from "react";
 import { QueryResult } from "@/types/database";
 
 interface TableSchemaViewerProps {
-  activeTable: string;
-  onSelectTable: (tableName: string) => void;
   executeQuery: (sql: string) => QueryResult;
 }
 
 const TableSchemaViewer: React.FC<TableSchemaViewerProps> = ({
-  activeTable,
-  onSelectTable,
   executeQuery,
 }) => {
+  const [activeTable, setActiveTable] = useState<string>("Customers");
   const [schema, setSchema] = useState<
     { column: string; type: string; nullable: string }[]
   >([]);
@@ -71,8 +68,8 @@ const TableSchemaViewer: React.FC<TableSchemaViewerProps> = ({
           {tableNames.map((tableName) => (
             <button
               key={tableName}
-              onClick={() => onSelectTable(tableName)}
-              className={`px-3 py-1.5 text-sm rounded-md ${
+              onClick={() => setActiveTable(tableName)}
+              className={`px-3 py-1.5 text-sm rounded-md cursor-pointer ${
                 activeTable === tableName
                   ? "bg-blue-100 text-blue-700 font-medium"
                   : "bg-gray-100 text-gray-700 hover:bg-gray-200"
