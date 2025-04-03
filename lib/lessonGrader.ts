@@ -136,6 +136,51 @@ export function getGradeOptionsForLesson(lessonId: string): GradeOptions {
         ],
       };
 
+    // Add these cases to your getGradeOptionsForLesson function in lib/lessonGrader.ts
+
+    case "10": // LIMIT Clause
+      return {
+        mustContain: [
+          "SELECT",
+          "FROM",
+          "Products",
+          "ORDER BY",
+          "price",
+          "ASC",
+          "LIMIT",
+          "5",
+        ],
+        expectedRows: 5,
+        hints: [
+          "Use ORDER BY price ASC to sort by price in ascending order",
+          "Use LIMIT 5 to get exactly 5 results",
+          "Make sure your query selects from the Products table",
+        ],
+      };
+
+    case "11": // OFFSET Clause
+      return {
+        mustContain: [
+          "SELECT",
+          "FROM",
+          "Products",
+          "ORDER BY",
+          "price",
+          "ASC",
+          "LIMIT",
+          "3",
+          "OFFSET",
+          "2",
+        ],
+        expectedRows: 3,
+        hints: [
+          "Use ORDER BY price ASC to sort by price in ascending order",
+          "Use LIMIT 3 to get exactly 3 results",
+          "Use OFFSET 2 to skip the first two cheapest products",
+          "Make sure your query selects from the Products table",
+        ],
+      };
+
     default:
       return {}; // Default empty options
   }
