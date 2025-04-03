@@ -181,6 +181,67 @@ export function getGradeOptionsForLesson(lessonId: string): GradeOptions {
         ],
       };
 
+    case "12": // LEFT JOIN
+      return {
+        mustContain: [
+          "SELECT",
+          "FROM",
+          "Products",
+          "LEFT JOIN",
+          "Order_Items",
+          "ON",
+          "product_id",
+          "ORDER BY",
+        ],
+        hints: [
+          "Use LEFT JOIN to ensure ALL products are included",
+          "Join the Products and Order_Items tables on the product_id column",
+          "Remember to ORDER BY product_id for consistent results",
+          "Products with no orders will have NULL values for order_id and quantity",
+        ],
+      };
+
+    case "13": // RIGHT JOIN
+      return {
+        mustContain: [
+          "SELECT",
+          "FROM",
+          "RIGHT JOIN",
+          "Customers",
+          "ON",
+          "customer_id",
+          "ORDER BY",
+        ],
+        hints: [
+          "Use RIGHT JOIN with Orders on the left and Customers on the right",
+          "Join the tables on the customer_id column",
+          "Make sure to ORDER BY customer_id for consistent results",
+          "Customers with no orders will have NULL values for order_id and order_date",
+          "Alternatively, you could use LEFT JOIN by switching the table order",
+        ],
+      };
+
+    case "14": // FULL JOIN (using UNION)
+      return {
+        mustContain: [
+          "SELECT",
+          "FROM",
+          "Products",
+          "LEFT JOIN",
+          "Order_Items",
+          "UNION",
+          "WHERE",
+          "IS NULL",
+        ],
+        hints: [
+          "Use UNION to combine two queries that simulate a FULL JOIN",
+          "First query: Products LEFT JOIN Order_Items WHERE order_id IS NULL",
+          "Second query: Order_Items LEFT JOIN Products WHERE product_id IS NULL",
+          "Make sure both queries have the same columns in the same order",
+          "Remember that SQLite doesn't support FULL JOIN directly",
+        ],
+      };
+
     default:
       return {}; // Default empty options
   }
