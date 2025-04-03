@@ -12,6 +12,7 @@ interface SqlEditorProps {
   onSaveProgress?: (completed: boolean, query: string) => void;
   expectedQuery?: string;
   gradeOptions?: GradeOptions;
+  disableFeedback?: boolean;
   children?: React.ReactNode;
 }
 
@@ -21,6 +22,7 @@ export const SqlEditor: React.FC<SqlEditorProps> = ({
   onSaveProgress,
   expectedQuery,
   gradeOptions = {},
+  disableFeedback = false,
   children,
 }) => {
   const [query, setQuery] = useState(initialQuery || "");
@@ -44,19 +46,29 @@ export const SqlEditor: React.FC<SqlEditorProps> = ({
       const result = onExecuteQuery(query);
       setQueryResult(result);
 
-      // Grade the query using our grading system
-      const options: GradeOptions = {
-        ...gradeOptions,
-        expectedQuery: expectedQuery || gradeOptions.expectedQuery,
-      };
+      // Only grade the query if feedback is not disabled
+      if (!disableFeedback) {
+        // Grade the query using our grading system
+        const options: GradeOptions = {
+          ...gradeOptions,
+          expectedQuery: expectedQuery || gradeOptions.expectedQuery,
+        };
 
-      const grade = gradeQuery(query, result.results, !!result.error, options);
+        const grade = gradeQuery(
+          query,
+          result.results,
+          !!result.error,
+          options
+        );
+        setGradeResult(grade);
 
-      setGradeResult(grade);
-
-      // Update progress if callback is provided
-      if (onSaveProgress) {
-        onSaveProgress(grade.isCorrect, query);
+        // Update progress if callback is provided
+        if (onSaveProgress) {
+          onSaveProgress(grade.isCorrect, query);
+        }
+      } else {
+        // Reset grade result if feedback is disabled
+        setGradeResult(null);
       }
     } catch (err) {
       console.error("Error executing query:", err);
@@ -97,8 +109,10 @@ export const SqlEditor: React.FC<SqlEditorProps> = ({
       {children}
 
       <div className="p-4">
-        {/* Display query feedback */}
-        {gradeResult && <QueryFeedback gradeResult={gradeResult} />}
+        {/* Display query feedback only if not disabled */}
+        {!disableFeedback && gradeResult && (
+          <QueryFeedback gradeResult={gradeResult} />
+        )}
 
         {queryResult.error ? (
           <div className="mt-4 p-4 border border-red-300 bg-red-50 text-red-800 rounded-md">

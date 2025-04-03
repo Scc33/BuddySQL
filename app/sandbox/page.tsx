@@ -6,7 +6,6 @@ import { SqlEditor } from "@/components/lessons/SqlEditor";
 import { initializeDatabase } from "@/lib/lessons";
 import { useSqlJs } from "@/hooks/useSqlJs";
 import Loading from "@/components/ui/loading";
-import { QueryResult } from "@/types/database";
 import TableSchemaViewer from "@/components/Sandbox/TableSchemaViewer";
 
 export default function SandboxPage() {
@@ -15,10 +14,6 @@ export default function SandboxPage() {
   const [initialQuery, setInitialQuery] = useState<string>(
     "SELECT * FROM Customers LIMIT 10;"
   );
-  const [queryResult, setQueryResult] = useState<QueryResult>({
-    results: null,
-    error: null,
-  });
 
   const {
     isLoading,
@@ -28,7 +23,6 @@ export default function SandboxPage() {
     db,
   } = useSqlJs();
 
-  // Initialize the database once when ready
   useEffect(() => {
     if (db && !dbInitialized) {
       const sql = initializeDatabase();
@@ -41,15 +35,12 @@ export default function SandboxPage() {
 
   const handleExecuteQuery = (sql: string) => {
     const result = executeQuery(sql);
-    setQueryResult(result);
     return result;
   };
 
   const handleTableSelect = (tableName: string) => {
     setActiveTable(tableName);
     setInitialQuery(`SELECT * FROM ${tableName} LIMIT 10;`);
-    const result = executeQuery(`SELECT * FROM ${tableName} LIMIT 10;`);
-    setQueryResult(result);
   };
 
   if (isLoading) {
@@ -93,7 +84,6 @@ export default function SandboxPage() {
         </div>
 
         <div className="grid gap-8 md:grid-cols-3">
-          {/* Table Schema Panel - 1/3 width on desktop, full width on mobile */}
           <div className="md:col-span-1">
             <Card>
               <CardHeader>
@@ -109,7 +99,6 @@ export default function SandboxPage() {
             </Card>
           </div>
 
-          {/* SQL Editor Panel - 2/3 width on desktop, full width on mobile */}
           <div className="md:col-span-2">
             <Card>
               <CardHeader>
@@ -123,6 +112,7 @@ export default function SandboxPage() {
                 <SqlEditor
                   initialQuery={initialQuery}
                   onExecuteQuery={handleExecuteQuery}
+                  disableFeedback={true}
                 />
               </CardContent>
             </Card>
