@@ -96,7 +96,7 @@ export default function Header() {
             >
               <span className="sr-only">GitHub</span>
               <Image
-                src="/images/Github-icon.svg"
+                src="/images/github-icon.svg"
                 alt="GitHub Icon"
                 height={24}
                 width={24}
@@ -114,7 +114,7 @@ export default function Header() {
             >
               <span className="sr-only">GitHub</span>
               <Image
-                src="/images/Github-icon.svg"
+                src="/images/github-icon.svg"
                 alt="GitHub Icon"
                 height={24}
                 width={24}
