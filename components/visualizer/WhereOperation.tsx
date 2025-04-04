@@ -47,28 +47,34 @@ const WhereOperation: React.FC<WhereOperationProps> = ({ results }) => {
                         <div className="w-1/5 text-xs font-semibold">
                           $799.99
                         </div>
-                        <div className="w-2/5 text-xs italic">Electronics</div>
+                        <div className="w-2/5 text-xs italic text-right">
+                          Electronics
+                        </div>
                       </div>
                       <div className="flex bg-white p-1 border border-gray-100 rounded">
                         <div className="w-2/5 text-xs">Laptop Pro</div>
                         <div className="w-1/5 text-xs font-semibold">
                           $1299.99
                         </div>
-                        <div className="w-2/5 text-xs italic">Electronics</div>
+                        <div className="w-2/5 text-xs italic text-right">
+                          Electronics
+                        </div>
                       </div>
                       <div className="flex bg-white p-1 border border-gray-100 rounded">
                         <div className="w-2/5 text-xs">Wireless Headphones</div>
                         <div className="w-1/5 text-xs font-semibold">
                           $159.99
                         </div>
-                        <div className="w-2/5 text-xs italic">Electronics</div>
+                        <div className="w-2/5 text-xs italic text-right">
+                          Electronics
+                        </div>
                       </div>
                       <div className="flex bg-white p-1 border border-gray-100 rounded">
                         <div className="w-2/5 text-xs">Coffee Maker</div>
                         <div className="w-1/5 text-xs font-semibold">
                           $89.99
                         </div>
-                        <div className="w-2/5 text-xs italic">
+                        <div className="w-2/5 text-xs italic text-right">
                           Home Appliances
                         </div>
                       </div>
@@ -77,14 +83,16 @@ const WhereOperation: React.FC<WhereOperationProps> = ({ results }) => {
                         <div className="w-1/5 text-xs font-semibold">
                           $79.99
                         </div>
-                        <div className="w-2/5 text-xs italic">Sportswear</div>
+                        <div className="w-2/5 text-xs italic text-right">
+                          Sportswear
+                        </div>
                       </div>
                       <div className="flex bg-white p-1 border border-gray-100 rounded">
                         <div className="w-2/5 text-xs">Blender</div>
                         <div className="w-1/5 text-xs font-semibold">
                           $69.99
                         </div>
-                        <div className="w-2/5 text-xs italic">
+                        <div className="w-2/5 text-xs italic text-right">
                           Home Appliances
                         </div>
                       </div>
@@ -139,40 +147,48 @@ const WhereOperation: React.FC<WhereOperationProps> = ({ results }) => {
                     Filtered Products
                   </div>
                   <div className="space-y-2">
-                    <div className="flex bg-white p-1 border border-yellow-100 rounded bg-yellow-50">
+                    <div className="flex p-1 border border-yellow-100 rounded bg-yellow-50">
                       <div className="w-2/5 text-xs">Smartphone X</div>
                       <div className="w-1/5 text-xs font-semibold">$799.99</div>
-                      <div className="w-2/5 text-xs italic">Electronics</div>
+                      <div className="w-2/5 text-xs italic text-right">
+                        Electronics
+                      </div>
                     </div>
-                    <div className="flex bg-white p-1 border border-yellow-100 rounded bg-yellow-50">
+                    <div className="flex p-1 border border-yellow-100 rounded bg-yellow-50">
                       <div className="w-2/5 text-xs">Laptop Pro</div>
                       <div className="w-1/5 text-xs font-semibold">
                         $1299.99
                       </div>
-                      <div className="w-2/5 text-xs italic">Electronics</div>
+                      <div className="w-2/5 text-xs italic text-right">
+                        Electronics
+                      </div>
                     </div>
-                    <div className="flex bg-white p-1 border border-yellow-100 rounded bg-yellow-50">
+                    <div className="flex p-1 border border-yellow-100 rounded bg-yellow-50">
                       <div className="w-2/5 text-xs">Wireless Headphones</div>
                       <div className="w-1/5 text-xs font-semibold">$159.99</div>
-                      <div className="w-2/5 text-xs italic">Electronics</div>
+                      <div className="w-2/5 text-xs italic text-right">
+                        Electronics
+                      </div>
                     </div>
-                    <div className="flex bg-white p-1 border border-yellow-100 rounded bg-yellow-50">
+                    <div className="flex p-1 border border-yellow-100 rounded bg-yellow-50">
                       <div className="w-2/5 text-xs">Coffee Maker</div>
                       <div className="w-1/5 text-xs font-semibold">$89.99</div>
-                      <div className="w-2/5 text-xs italic">
+                      <div className="w-2/5 text-xs italic text-right">
                         Home Appliances
                       </div>
                     </div>
-                    <div className="flex bg-white p-1 border border-yellow-100 rounded bg-yellow-50">
+                    <div className="flex p-1 border border-yellow-100 rounded bg-yellow-50">
                       <div className="w-2/5 text-xs">Running Shoes</div>
                       <div className="w-1/5 text-xs font-semibold">$79.99</div>
-                      <div className="w-2/5 text-xs italic">Sportswear</div>
+                      <div className="w-2/5 text-xs italic text-right">
+                        Sportswear
+                      </div>
                     </div>
                     {/* This one is filtered out */}
                     <div className="flex bg-white p-1 border border-gray-100 rounded opacity-20">
                       <div className="w-2/5 text-xs">Blender</div>
                       <div className="w-1/5 text-xs font-semibold">$69.99</div>
-                      <div className="w-2/5 text-xs italic">
+                      <div className="w-2/5 text-xs italic text-right">
                         Home Appliances
                       </div>
                     </div>
@@ -188,8 +204,8 @@ const WhereOperation: React.FC<WhereOperationProps> = ({ results }) => {
               <p>
                 The WHERE clause filters rows, allowing only those that match
                 specific conditions to pass through to your results. Think of it
-                as a bouncer that checks each row's credentials before allowing
-                it into your result set.
+                as a bouncer that checks each row&apos;s credentials before
+                allowing it into your result set.
               </p>
               <p>In our example:</p>
               <ul className="list-disc pl-5 space-y-1">
@@ -200,8 +216,8 @@ const WhereOperation: React.FC<WhereOperationProps> = ({ results }) => {
                   - Only includes products that cost more than $70
                 </li>
                 <li>
-                  The Blender at $69.99 is excluded because it doesn't meet the
-                  condition
+                  The Blender at $69.99 is excluded because it doesn&apos;t meet
+                  the condition
                 </li>
                 <li>
                   All other products pass through the filter because their

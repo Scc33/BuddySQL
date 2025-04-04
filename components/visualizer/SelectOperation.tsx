@@ -126,13 +126,13 @@ const SelectOperation: React.FC<SelectOperationProps> = ({ results }) => {
                   <code className="bg-blue-100 px-1 rounded">
                     customer_id, first_name, last_name, email
                   </code>{" "}
-                  - These are the columns we're selecting
+                  - These are the columns we&apos;re selecting
                 </li>
                 <li>
                   <code className="bg-blue-100 px-1 rounded">
                     FROM Customers
                   </code>{" "}
-                  - The table we're selecting from
+                  - The table we&apos;re selecting from
                 </li>
                 <li>
                   <code className="bg-blue-100 px-1 rounded">LIMIT 5</code> -
@@ -179,7 +179,7 @@ const SelectOperation: React.FC<SelectOperationProps> = ({ results }) => {
                   <p className="text-sm text-gray-600">
                     You can rename columns using <code>AS</code> for more
                     meaningful output (e.g.,{" "}
-                    <code>first_name AS "First Name"</code>)
+                    <code>first_name AS &quot;First Name&quot;</code>)
                   </p>
                 </div>
               </div>

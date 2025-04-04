@@ -254,7 +254,7 @@ const JoinOperation: React.FC<JoinOperationProps> = ({ results }) => {
                 </li>
                 <li>
                   If a customer has no orders (or vice versa with RIGHT JOIN),
-                  they won't appear in an INNER JOIN result
+                  they won&apos;t appear in an INNER JOIN result
                 </li>
               </ul>
             </div>

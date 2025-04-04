@@ -1,19 +1,17 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { initializeDatabase } from "@/lib/lessons";
 import { useSqlJs } from "@/hooks/useSqlJs";
 import Loading from "@/components/ui/loading";
 import { SqlResult } from "@/types/database";
-import { parseQuery } from "@/lib/queryParser";
-import Image from "next/image";
 
 // SQL operation visualizations
-import SelectOperation from "@/components/visualizer/operations/SelectOperation";
-import WhereOperation from "@/components/visualizer/operations/WhereOperation";
-import JoinOperation from "@/components/visualizer/operations/JoinOperation";
-import GroupByOperation from "@/components/visualizer/operations/GroupByOperation";
+import SelectOperation from "@/components/visualizer/SelectOperation";
+import WhereOperation from "@/components/visualizer/WhereOperation";
+import JoinOperation from "@/components/visualizer/JoinOperation";
+import GroupByOperation from "@/components/visualizer/GroupByOperation";
+import Image from "next/image";
 
 export default function VisualizerPage() {
   const [dbInitialized, setDbInitialized] = useState(false);
@@ -204,12 +202,12 @@ function OperationButton({
   return (
     <button
       onClick={onClick}
-      className={`p-4 rounded-lg transition-all ${color} ${
+      className={`p-4 rounded-lg transition-all cursor-pointer ${color} ${
         isActive ? "ring-2 ring-offset-2 ring-blue-500" : ""
       } flex items-center`}
     >
       <div className="w-10 h-10 flex-shrink-0 mr-3 flex items-center justify-center">
-        <img src={icon} alt={`${name} icon`} width={32} height={32} />
+        <Image src={icon} alt={`${name} icon`} width={32} height={32} />
       </div>
       <div className="text-left">
         <h3 className="font-semibold">{name}</h3>
