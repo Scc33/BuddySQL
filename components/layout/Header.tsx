@@ -62,6 +62,7 @@ const navLinks = [
   { href: "/lessons", label: "Lessons" },
   { href: "/sandbox", label: "Sandbox" },
   { href: "/visualizer", label: "Visualizer" },
+  { href: "/glossary", label: "Glossary" },
 ];
 
 export default function Header() {
