@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import AlphabeticalIndex from "@/components/glossary/AlphabeticalIndex";
 import GlossaryFilters from "@/components/glossary/GlossaryFilters";
@@ -22,6 +22,7 @@ export default function GlossaryPage() {
     {}
   );
   const [activeLetter, setActiveLetter] = useState<string | null>(null);
+  const isSearching = useRef(false);
 
   useEffect(() => {
     // Initialize the index
@@ -30,16 +31,26 @@ export default function GlossaryPage() {
     // Get initial terms
     let terms: GlossaryTerm[];
 
-    if (searchQuery.trim()) {
+    // If there's a search query, it takes precedence
+    if (searchQuery.trim() && isSearching.current) {
       terms = searchGlossaryTerms(searchQuery);
-    } else if (activeLetter) {
-      terms = getAllGlossaryTerms().filter((term) =>
-        term.title.toUpperCase().startsWith(activeLetter)
-      );
+      // Apply category filter to search results if not "all"
       if (activeCategory !== "all") {
         terms = terms.filter((term) => term.category === activeCategory);
       }
-    } else {
+    }
+    // If a letter is active, filter by starting letter
+    else if (activeLetter) {
+      terms = getAllGlossaryTerms().filter((term) =>
+        term.title.toUpperCase().startsWith(activeLetter)
+      );
+      // Apply category filter to letter results if not "all"
+      if (activeCategory !== "all") {
+        terms = terms.filter((term) => term.category === activeCategory);
+      }
+    }
+    // Otherwise, just filter by category
+    else {
       terms = getGlossaryTermsByCategory(activeCategory);
     }
 
@@ -48,17 +59,30 @@ export default function GlossaryPage() {
 
   const handleCategoryChange = (category: string) => {
     setActiveCategory(category);
-    setActiveLetter(null);
+    // Don't reset letter filter when changing category
   };
 
   const handleSearch = (query: string) => {
+    if (query.trim() === "") {
+      isSearching.current = false;
+    } else {
+      isSearching.current = true;
+      // Clear letter filter when searching
+      setActiveLetter(null);
+    }
     setSearchQuery(query);
-    setActiveLetter(null);
   };
 
   const handleLetterClick = (letter: string) => {
-    setActiveLetter(letter === activeLetter ? null : letter);
-    setSearchQuery("");
+    // Toggle the letter if it's already active
+    if (letter === activeLetter) {
+      setActiveLetter(null);
+    } else {
+      setActiveLetter(letter);
+      // Clear search when filtering by letter
+      setSearchQuery("");
+      isSearching.current = false;
+    }
   };
 
   return (
@@ -115,7 +139,7 @@ export default function GlossaryPage() {
             <Card>
               <CardHeader>
                 <CardTitle>
-                  {searchQuery
+                  {searchQuery && isSearching.current
                     ? `Search Results: ${filteredTerms.length} terms found`
                     : activeLetter
                     ? `Terms starting with '${activeLetter}'`
