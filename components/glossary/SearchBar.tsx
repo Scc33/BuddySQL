@@ -23,7 +23,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
       />
       <button
         type="submit"
-        className="absolute right-2 top-1/2 transform -translate-y-1/2 p-1 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100"
+        className="absolute right-2 top-1/2 transform -translate-y-1/2 p-1 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 cursor-pointer"
       >
         <svg
           className="w-5 h-5"

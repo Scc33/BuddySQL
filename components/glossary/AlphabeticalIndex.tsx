@@ -21,7 +21,7 @@ const AlphabeticalIndex: React.FC<AlphabeticalIndexProps> = ({
           <button
             key={letter}
             className={`
-              w-7 h-7 flex items-center justify-center rounded text-sm font-medium
+              w-7 h-7 flex items-center justify-center rounded text-sm font-medium cursor-pointer
               ${
                 hasTerms
                   ? activeLetter === letter
