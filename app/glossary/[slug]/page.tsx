@@ -4,11 +4,7 @@ import { useState, useEffect } from "react";
 import { notFound, useParams } from "next/navigation";
 import Link from "next/link";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { SqlEditor } from "@/components/lessons/SqlEditor";
 import { getGlossaryTermBySlug, getRelatedTerms } from "@/lib/glossaryData";
-import { useSqlJs } from "@/hooks/useSqlJs";
-import { initializeDatabase } from "@/lib/lessons";
-import Loading from "@/components/ui/loading";
 import { GlossaryTerm } from "@/types/glossary";
 
 export default function GlossaryTermPage() {
@@ -17,15 +13,6 @@ export default function GlossaryTermPage() {
 
   const [term, setTerm] = useState<GlossaryTerm | null>(null);
   const [relatedTerms, setRelatedTerms] = useState<GlossaryTerm[]>([]);
-  const [dbInitialized, setDbInitialized] = useState(false);
-
-  const {
-    isLoading,
-    error,
-    executeQuery,
-    initializeDatabase: initDb,
-    db,
-  } = useSqlJs();
 
   useEffect(() => {
     const termData = getGlossaryTermBySlug(slug);
@@ -40,44 +27,6 @@ export default function GlossaryTermPage() {
       setRelatedTerms(related);
     }
   }, [slug]);
-
-  // Initialize the database once when ready
-  useEffect(() => {
-    if (db && !dbInitialized) {
-      const sql = initializeDatabase();
-      const success = initDb(sql);
-      if (success) {
-        setDbInitialized(true);
-      }
-    }
-  }, [db, dbInitialized, initDb]);
-
-  const handleExecuteQuery = (sql: string) => {
-    const result = executeQuery(sql);
-    return result;
-  };
-
-  if (isLoading) {
-    return (
-      <Loading
-        title="Loading SQL engine..."
-        subtitle="This may take a moment to initialize"
-      />
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="p-6 bg-red-50 border border-red-200 rounded-lg">
-          <h3 className="text-lg font-medium text-red-800 mb-2">
-            Error Loading SQL Engine
-          </h3>
-          <p className="text-red-700">{error}</p>
-        </div>
-      </div>
-    );
-  }
 
   if (!term) {
     return (
@@ -172,17 +121,36 @@ export default function GlossaryTermPage() {
                 </div>
               )}
 
-              {/* Interactive example if available */}
+              {/* Link to Sandbox instead of embedded SQL runner */}
               {term.examples && term.examples.length > 0 && (
-                <div>
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">
-                    Try it yourself
+                <div className="bg-blue-50 border border-blue-200 rounded-md p-4">
+                  <h3 className="text-lg font-medium text-blue-800">
+                    Want to try this example?
                   </h3>
-                  <SqlEditor
-                    initialQuery={term.examples[0]}
-                    onExecuteQuery={handleExecuteQuery}
-                    disableFeedback={true}
-                  />
+                  <p className="mb-4 text-blue-700">
+                    Head over to our SQL Sandbox to experiment with this and
+                    other SQL queries in a live environment.
+                  </p>
+                  <Link
+                    href="/sandbox"
+                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                  >
+                    Go to SQL Sandbox
+                    <svg
+                      className="ml-2 -mr-1 h-4 w-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M14 5l7 7m0 0l-7 7m7-7H3"
+                      />
+                    </svg>
+                  </Link>
                 </div>
               )}
             </CardContent>
