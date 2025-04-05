@@ -8,9 +8,9 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
   const [searchTerm, setSearchTerm] = useState("");
 
   // Debounce function to delay search execution
-  const debounce = (fn: Function, delay: number) => {
+  const debounce = (fn: (arg0: string) => void, delay: number) => {
     let timeoutId: NodeJS.Timeout;
-    return function (...args: any[]) {
+    return function (...args: Parameters<typeof fn>) {
       clearTimeout(timeoutId);
       timeoutId = setTimeout(() => fn(...args), delay);
     };
