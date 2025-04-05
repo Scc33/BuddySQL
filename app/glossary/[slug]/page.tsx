@@ -126,8 +126,8 @@ export default function GlossaryTermPage() {
         <div className="md:col-span-2">
           <Card>
             <CardHeader>
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-2xl">{term.title}</CardTitle>
+              <CardTitle className="text-2xl">{term.title}</CardTitle>
+              <div className="flex items-center justify-end">
                 <span
                   className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${termColor}`}
                 >
