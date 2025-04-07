@@ -274,8 +274,8 @@ export default function Home() {
               Start your SQL journey today
             </h2>
             <p className="mt-6 text-lg leading-8 text-gray-600">
-              Whether you're a complete beginner or looking to brush up your
-              skills, our interactive platform has everything you need to
+              Whether you&apos;re a complete beginner or looking to brush up
+              your skills, our interactive platform has everything you need to
               succeed with SQL.
             </p>
             <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
