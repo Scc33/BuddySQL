@@ -6,6 +6,7 @@ on:
 
 jobs:
   pkg-size-report:
+    permissions: write-all
     name: Package Size Report
     runs-on: ubuntu-latest
 
