@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 
 export default function Home() {
   return (
@@ -104,7 +103,7 @@ export default function Home() {
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M15.485 4.544a8.25 8.25 0 00-13.803 3.7m0 0l-3.181-3.183m0 0h-4.992m16.023 0h4.992M10.957 12.637a1.5 1.5 0 10-2.196 2.037"
+                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
                       />
                     </svg>
                   </div>
