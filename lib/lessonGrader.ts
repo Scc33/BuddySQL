@@ -242,6 +242,29 @@ export function getGradeOptionsForLesson(lessonId: string): GradeOptions {
         ],
       };
 
+    case "15": // Subqueries
+      return {
+        mustContain: [
+          "SELECT",
+          "FROM",
+          "Products",
+          "WHERE",
+          "price",
+          ">",
+          "SELECT",
+          "AVG",
+          "price",
+          "FROM",
+          "Products",
+        ],
+        hints: [
+          "Use a subquery in the WHERE clause to calculate the average price",
+          "Your main query should compare each product's price against this average",
+          "Make sure your subquery is enclosed in parentheses",
+          "The comparison operator should be > (greater than)",
+        ],
+      };
+
     default:
       return {}; // Default empty options
   }

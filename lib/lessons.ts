@@ -893,6 +893,127 @@ Try running these examples to understand how a FULL JOIN works conceptually!
         "SELECT p.product_id, p.name, oi.order_id FROM Products p LEFT JOIN Order_Items oi ON p.product_id = oi.product_id WHERE oi.item_id IS NULL UNION SELECT oi.product_id, p.name, oi.order_id FROM Order_Items oi LEFT JOIN Products p ON oi.product_id = p.product_id WHERE p.product_id IS NULL;",
     },
   },
+  {
+    id: "15",
+    slug: "subqueries",
+    title: "Subqueries",
+    description:
+      "Learn how to use queries inside other queries for powerful data retrieval",
+    content: `
+  # Understanding Subqueries in SQL
+  
+  A subquery is a query nested inside another query. Think of it as a query within a query - allowing you to use the result of one query as part of another query.
+  
+  ## When to Use Subqueries
+  
+  Subqueries are helpful when you need to:
+  - Filter data based on results from another query
+  - Compare values against aggregated results
+  - Check for the existence of related records
+  - Create more complex logic than a simple JOIN allows
+  
+  ## Basic Syntax
+  
+  Subqueries can appear in different parts of a SQL statement:
+  
+  \`\`\`sql
+  -- In the WHERE clause
+  SELECT column1, column2
+  FROM table1
+  WHERE column1 IN (SELECT column1 FROM table2 WHERE condition);
+  
+  -- In the FROM clause
+  SELECT a.column1, b.column2
+  FROM table1 a, (SELECT * FROM table2 WHERE condition) b
+  WHERE a.id = b.id;
+  
+  -- In the SELECT clause
+  SELECT 
+      column1,
+      (SELECT MAX(column2) FROM table2) as max_value
+  FROM table1;
+  \`\`\`
+  
+  ## Subquery Types
+  
+  1. **Scalar Subqueries**: Return a single value
+  2. **Row Subqueries**: Return a single row with multiple columns
+  3. **Column Subqueries**: Return a single column with multiple rows
+  4. **Table Subqueries**: Return multiple columns and rows
+  
+  ## Example 1: Subquery in the WHERE Clause
+  
+  Let's find customers who have placed at least one order over $100:
+  
+  \`\`\`sql
+  SELECT customer_id, first_name, last_name 
+  FROM Customers
+  WHERE customer_id IN (
+      SELECT customer_id 
+      FROM Orders 
+      WHERE total_amount > 100
+  );
+  \`\`\`
+  
+  This query first finds all customer IDs from the Orders table where the total amount exceeds $100, then retrieves the customer details for those IDs.
+  
+  ## Example 2: Subquery in the SELECT Clause
+  
+  Find each product along with how much its price differs from the average product price:
+  
+  \`\`\`sql
+  SELECT 
+      name,
+      price,
+      price - (SELECT AVG(price) FROM Products) AS price_difference
+  FROM 
+      Products;
+  \`\`\`
+  
+  Here, the subquery calculates the average price once, and then each row's price is compared against that average.
+  
+  ## Example 3: Subquery in the FROM Clause
+  
+  Find the average order amount for electronics products:
+  
+  \`\`\`sql
+  SELECT AVG(order_total) AS avg_electronics_order
+  FROM (
+      SELECT o.order_id, SUM(oi.price_each * oi.quantity) AS order_total
+      FROM Orders o
+      JOIN Order_Items oi ON o.order_id = oi.order_id
+      JOIN Products p ON oi.product_id = p.product_id
+      WHERE p.category = 'Electronics'
+      GROUP BY o.order_id
+  ) AS electronics_orders;
+  \`\`\`
+  
+  This complex query first creates a derived table of orders containing electronics products, then calculates the average order total from that derived table.
+  
+  ## Subquery Operators
+  
+  - **IN**: Checks if a value matches any value in the subquery result
+  - **NOT IN**: Checks if a value doesn't match any value in the subquery result
+  - **EXISTS**: Returns true if the subquery returns any rows
+  - **NOT EXISTS**: Returns true if the subquery returns no rows
+  - **ANY/SOME**: Returns true if any of the subquery values meet the condition
+  - **ALL**: Returns true if all of the subquery values meet the condition
+  
+  Try running some of these examples to see how subqueries work!
+    `,
+    order: 15,
+    category: "intermediate",
+    initialQuery:
+      "SELECT customer_id, first_name, last_name FROM Customers WHERE customer_id IN (SELECT customer_id FROM Orders WHERE total_amount > 100);",
+    challenge: {
+      description:
+        "Write a query that finds all products that cost more than the average product price. (Hint: use a subquery to calculate the average price)",
+      success_message:
+        "Excellent! You've successfully used a subquery to compare individual products against an aggregate value.",
+      validation_query:
+        "SELECT * FROM Products WHERE price > (SELECT AVG(price) FROM Products);",
+    },
+  },
 ];
 
 // Helper functions for lessons
